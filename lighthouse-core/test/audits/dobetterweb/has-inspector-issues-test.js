@@ -54,7 +54,7 @@ describe('Has inspector issues audit', () => {
     });
     expect(auditResult.score).toBe(0);
     expect(auditResult.details.items[0]).toMatchObject({
-      issueType: 'Mixed Content',
+      issueType: 'Mixed content',
       subItems: {
         type: 'subitems',
         items: [
@@ -89,7 +89,7 @@ describe('Has inspector issues audit', () => {
     });
     expect(auditResult.score).toBe(0);
     expect(auditResult.details.items[0]).toMatchObject({
-      issueType: 'SameSite Cookie',
+      issueType: 'SameSite cookie',
       subItems: {
         type: 'subitems',
         items: [
@@ -146,7 +146,7 @@ describe('Has inspector issues audit', () => {
     expect(auditResult.score).toBe(0);
     expect(auditResult.details.items[0]).toMatchObject({
       issueType: {
-        formattedDefault: 'Blocked By Response',
+        formattedDefault: 'Blocked by cross-origin policy',
       },
       subItems: {
         type: 'subitems',
@@ -192,7 +192,7 @@ describe('Has inspector issues audit', () => {
     expect(auditResult.score).toBe(0);
     expect(auditResult.details.items[0]).toMatchObject({
       issueType: {
-        formattedDefault: 'Heavy Ads',
+        formattedDefault: 'Heavy resource usage by ads',
       },
     });
   });
@@ -228,7 +228,7 @@ describe('Has inspector issues audit', () => {
     });
     expect(auditResult.score).toBe(0);
     expect(auditResult.details.items[0]).toMatchObject({
-      issueType: 'Content Security Policy',
+      issueType: 'Content security policy',
       subItems: {
         type: 'subitems',
         items: [

@@ -29,8 +29,8 @@ const UIStrings = {
   /* eslint-enable max-len */
   /** Table column header for the types of problems observed in a website, like security or network errors. */
   columnIssueType: 'Issue type',
-  /** The type of an Issue in Chrome DevTools when a resource is blocked due to receiving a rejection in the response to a request made on the page. */
-  issueTypeBlockedByResponse: 'Blocked by response',
+  /** The type of an Issue in Chrome DevTools when a resource is blocked due to the website's cross-origin policy. */
+  issueTypeBlockedByResponse: 'Blocked by cross-origin policy',
   /** The type of an Issue in Chrome DevTools when a site has large ads that use up a lot of the browser's resources. */
   issueTypeHeavyAds: 'Heavy resource usage by ads',
 };
@@ -62,7 +62,7 @@ class IssuesPanelEntries extends Audit {
       requestUrls.add(requestUrl);
     }
     return {
-      issueType: 'Mixed Content',
+      issueType: 'Mixed content',
       subItems: {
         type: 'subitems',
         items: Array.from(requestUrls).map(url => ({url})),
@@ -83,7 +83,7 @@ class IssuesPanelEntries extends Audit {
       }
     }
     return {
-      issueType: 'SameSite Cookie',
+      issueType: 'SameSite cookie',
       subItems: {
         type: 'subitems',
         items: Array.from(requestUrls).map(url => {
@@ -133,7 +133,7 @@ class IssuesPanelEntries extends Audit {
       }
     }
     return {
-      issueType: 'Content Security Policy',
+      issueType: 'Content security policy',
       subItems: {
         type: 'subitems',
         items: Array.from(requestUrls).map(url => {

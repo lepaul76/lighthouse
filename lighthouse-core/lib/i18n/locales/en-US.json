@@ -675,7 +675,7 @@
     "message": "Issues were logged in the `Issues` panel in Chrome Devtools"
   },
   "lighthouse-core/audits/dobetterweb/has-inspector-issues.js | issueTypeBlockedByResponse": {
-    "message": "Blocked by response"
+    "message": "Blocked by cross-origin policy"
   },
   "lighthouse-core/audits/dobetterweb/has-inspector-issues.js | issueTypeHeavyAds": {
     "message": "Heavy resource usage by ads"
