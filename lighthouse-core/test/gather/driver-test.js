@@ -9,63 +9,17 @@ const Driver = require('../../gather/driver.js');
 const Connection = require('../../gather/connections/connection.js');
 const LHElement = require('../../lib/lh-element.js');
 const {protocolGetVersionResponse} = require('./fake-driver.js');
-const {createMockSendCommandFn, createMockOnceFn} = require('./mock-commands.js');
+const {
+  createMockSendCommandFn,
+  createMockOnceFn,
+  createDecomposedPromise,
+  makePromiseInspectable,
+  flushAllTimersAndMicrotasks,
+} = require('../test-utils.js');
 
 /* eslint-env jest */
 
 jest.useFakeTimers();
-
-/**
- * Transparently augments the promise with inspectable functions to query its state.
- *
- * @template T
- * @param {Promise<T>} promise
- */
-function makePromiseInspectable(promise) {
-  let isResolved = false;
-  let isRejected = false;
-  /** @type {T=} */
-  let resolvedValue = undefined;
-  /** @type {any=} */
-  let rejectionError = undefined;
-  const inspectablePromise = promise.then(value => {
-    isResolved = true;
-    resolvedValue = value;
-    return value;
-  }).catch(err => {
-    isRejected = true;
-    rejectionError = err;
-    throw err;
-  });
-
-  return Object.assign(inspectablePromise, {
-    isDone() {
-      return isResolved || isRejected;
-    },
-    isResolved() {
-      return isResolved;
-    },
-    isRejected() {
-      return isRejected;
-    },
-    getDebugValues() {
-      return {resolvedValue, rejectionError};
-    },
-  });
-}
-
-function createDecomposedPromise() {
-  /** @type {Function} */
-  let resolve;
-  /** @type {Function} */
-  let reject;
-  const promise = new Promise((r1, r2) => {
-    resolve = r1;
-    reject = r2;
-  });
-  // @ts-expect-error: Ignore 'unused' error.
-  return {promise, resolve, reject};
-}
 
 function createMockWaitForFn() {
   const {promise, resolve, reject} = createDecomposedPromise();
@@ -83,39 +37,6 @@ function createMockWaitForFn() {
       return mockCancelFn;
     },
   });
-}
-
-expect.extend({
-  /**
-   * Asserts that an inspectable promise created by makePromiseInspectable is currently resolved or rejected.
-   * This is useful for situations where we want to test that we are actually waiting for a particular event.
-   *
-   * @param {ReturnType<typeof makePromiseInspectable>} received
-   * @param {string} failureMessage
-   */
-  toBeDone(received, failureMessage) {
-    const pass = received.isDone();
-
-    const message = () =>
-      [
-        `${this.utils.matcherHint('.toBeDone')}\n`,
-        `Expected promise to be resolved: ${this.utils.printExpected(failureMessage)}`,
-        `  ${this.utils.printReceived(received.getDebugValues())}`,
-      ].join('\n');
-
-    return {message, pass};
-  },
-});
-
-/**
- * In some functions we have lots of promise follow ups that get queued by protocol messages.
- * This is a convenience method to easily advance all timers and flush all the queued microtasks.
- */
-async function flushAllTimersAndMicrotasks(ms = 1000) {
-  for (let i = 0; i < ms; i++) {
-    jest.advanceTimersByTime(1);
-    await Promise.resolve();
-  }
 }
 
 /**
