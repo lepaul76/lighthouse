@@ -443,7 +443,6 @@ class Driver {
    * will be evaluated in a content script that has access to the page's DOM but whose JavaScript state
    * is completely separate.
    * Returns a promise that resolves on the expression's value.
-   * @template T
    * @param {string} expression
    * @param {{useIsolation?: boolean}=} options
    * @return {Promise<*>}
@@ -468,12 +467,16 @@ class Driver {
   }
 
   /**
+   * @typedef {any[]} TExtendsArray
+   */
+
+  /**
    * Evaluate an expression (optionally defined in a structured manner, see `createEvalCode`
    * in `page-functions.js`).
    * See `evaluateAsync`.
-   * @template T, R
-   * @param {string | ((...args: T[]) => R)} expressionOrMainFn
-   * @param {{useIsolation?: boolean, args?: T[], deps?: Array<Function|string>}=} options
+   * @template {TExtendsArray} T, R
+   * @param {string | ((...args: T) => R)} expressionOrMainFn
+   * @param {{useIsolation?: boolean, args?: T, deps?: Array<Function|string>}=} options
    * @return {Promise<R>}
    */
   async evaluate(expressionOrMainFn, options = {}) {

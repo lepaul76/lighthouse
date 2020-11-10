@@ -11,11 +11,15 @@
 /* global window document Node ShadowRoot */
 
 /**
+ * @typedef {any[]} TExtendsArray
+ */
+
+/**
  * Creates valid JavaScript code given functions, strings of valid code, and arguments.
- * @template T, R
- * @param {(...args: T[]) => R} mainFn The main function to call. It's return value will be the return value
+ * @template {TExtendsArray} T, R
+ * @param {(...args: T) => R} mainFn The main function to call. It's return value will be the return value
  * of `createEvalCode`, wrapped in a Promise.
- * @param {{mode?: 'iife'|'function', args?: T[], deps?: Array<Function|string>}} _ Set mode to `iife` to
+ * @param {{mode?: 'iife'|'function', args?: T, deps?: Array<Function|string>}} _ Set mode to `iife` to
  * create a self-executing function expression, set to `function` to create just a function
  * declaration statement. Args should match the args of `mainFn`, and can be any serializable
  * value. `deps` are functions that must be defined for `mainFn` to work.
