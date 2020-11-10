@@ -377,7 +377,6 @@ function getNodeLabel(node) {
     }
     return str.slice(0, maxLength - 1) + '…';
   }
-
   const tagName = node.tagName.toLowerCase();
   // html and body content is too broad to be useful, since they contain all page content
   if (tagName !== 'html' && tagName !== 'body') {
@@ -398,7 +397,7 @@ function getNodeLabel(node) {
 
 /**
  * @param {HTMLElement} element
- * @param {LH.Artifacts.Rect}
+ * @return {LH.Artifacts.Rect}
  */
 /* istanbul ignore next */
 function getBoundingClientRect(element) {
@@ -450,7 +449,8 @@ function wrapRequestIdleCallback(cpuSlowdownMultiplier) {
 /**
  * @param {HTMLElement} element
  */
-function getNodeDetails(element) {
+function getNodeDetailsImpl(element) {
+  element = element instanceof ShadowRoot ? element.host : element;
   const details = {
     devtoolsNodePath: getNodePath(element),
     selector: getNodeSelector(element),
@@ -469,8 +469,8 @@ const getNodeDetailsString = `function getNodeDetails(element) {
   ${getBoundingClientRect.toString()};
   ${getOuterHTMLSnippet.toString()};
   ${getNodeLabel.toString()};
-  ${getNodeDetails.toString()};
-  return getNodeDetails(element);
+  ${getNodeDetailsImpl.toString()};
+  return getNodeDetailsImpl(element);
 }`;
 
 module.exports = {
