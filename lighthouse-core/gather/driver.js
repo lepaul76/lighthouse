@@ -448,8 +448,7 @@ class Driver {
    * @return {Promise<*>}
    */
   async evaluateAsync(expression, options = {}) {
-    const contextId =
-      options.useIsolation ? await this._getOrCreateIsolatedContextId() : undefined;
+    const contextId = options.useIsolation ? await this._getOrCreateIsolatedContextId() : undefined;
 
     try {
       // `await` is not redundant here because we want to `catch` the async errors

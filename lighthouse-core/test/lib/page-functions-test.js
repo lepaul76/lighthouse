@@ -20,15 +20,13 @@ describe('createEvalCode', () => {
     const code = pageFunctions.createEvalCode(mainFn, {
       mode: 'iife',
     });
-    expect(code).toMatchInlineSnapshot(`
-      "(() => {
-            
-            function mainFn() {
-            return true;
-          }
-            return mainFn();
-          })()"
-    `);
+    expect(code).toEqual(`(() => {
+      
+      function mainFn() {
+      return true;
+    }
+      return mainFn();
+    })()`);
     expect(eval(code)).toEqual(true);
   });
 
@@ -47,27 +45,25 @@ describe('createEvalCode', () => {
       deps: [abs, square],
       mode: 'iife',
     });
-    expect(code).toMatchInlineSnapshot(`
-      "(() => {
-            function abs(val) {
-            return Math.abs(val);
-          }
-      function square(val) {
-            return val * val;
-          }
-            function mainFn({
-            a,
-            b
-          }, passThru) {
-            return {
-              a: abs(a),
-              b: square(b),
-              passThru
-            };
-          }
-            return mainFn({\\"a\\":-5,\\"b\\":10},\\"hello\\");
-          })()"
-    `);
+    expect(code).toEqual(`(() => {
+      function abs(val) {
+      return Math.abs(val);
+    }
+function square(val) {
+      return val * val;
+    }
+      function mainFn({
+      a,
+      b
+    }, passThru) {
+      return {
+        a: abs(a),
+        b: square(b),
+        passThru
+      };
+    }
+      return mainFn({"a":-5,"b":10},"hello");
+    })()`);
     expect(eval(code)).toEqual({a: 5, b: 100, passThru: 'hello'});
   });
 
@@ -83,17 +79,15 @@ describe('createEvalCode', () => {
       mode: 'function',
       deps: [adder],
     });
-    expect(code).toMatchInlineSnapshot(`
-      "function () {
-            function adder(a, b) {
-            return a + b;
-          }
-            function mainFn(a, b) {
-            return adder(a, b);
-          }
-            return mainFn.call(this, 1,2);
-          }"
-    `);
+    expect(code).toEqual(`function () {
+      function adder(a, b) {
+      return a + b;
+    }
+      function mainFn(a, b) {
+      return adder(a, b);
+    }
+      return mainFn.call(this, 1,2);
+    }`);
     expect(eval(`(${code})()`)).toEqual(3);
   });
 });
