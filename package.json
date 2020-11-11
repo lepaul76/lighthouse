@@ -146,7 +146,7 @@
     "prettier": "^1.14.3",
     "pretty-json-stringify": "^0.0.2",
     "puppeteer": "^1.19.0",
-    "terser": "^4.2.0",
+    "terser": "^5.2.0",
     "typescript": "3.9.7"
   },
   "dependencies": {

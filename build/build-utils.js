@@ -31,11 +31,8 @@ function minifyFileTransform(file) {
       code += chunk.toString();
       next();
     },
-    final(next) {
-      const result = terser.minify(code);
-      if (result.error) {
-        throw result.error;
-      }
+    async final(next) {
+      const result = await terser.minify(code, {ecma: 2019});
 
       if (result.code) {
         const saved = code.length - result.code.length;
