@@ -29,19 +29,19 @@ const MainThreadTasks = require('../computed/main-thread-tasks.js');
 const ThirdPartySummary = require('./third-party-summary.js');
 
 const UIStrings = {
-  /** Title of a diagnostic audit that provides details about the third-party code on a web page that can be lazy loaded with a facade alternative. This descriptive title is shown to users when no resources have facade alternatives available. Lazy loading means resources are deferred until they are needed. Third-party code refers to resources that are not within the control of the site owner. */
+  /** Title of a diagnostic audit that provides details about the third-party code on a web page that can be lazy loaded with a facade alternative. This descriptive title is shown to users when no resources have facade alternatives available. A facade is a lightweight component which looks like the desired resource. Lazy loading means resources are deferred until they are needed. Third-party code refers to resources that are not within the control of the site owner. */
   title: 'Lazy load third-party resources with facades',
-  /** Title of a diagnostic audit that provides details about the third-party code on a web page that can be lazy loaded with a facade alternative. This descriptive title is shown to users when one or more third-party resources have available facade alternatives. Lazy loading means resources are deferred until they are needed. Third-party code refers to resources that are not within the control of the site owner. */
+  /** Title of a diagnostic audit that provides details about the third-party code on a web page that can be lazy loaded with a facade alternative. This descriptive title is shown to users when one or more third-party resources have available facade alternatives. A facade is a lightweight component which looks like the desired resource. Lazy loading means resources are deferred until they are needed. Third-party code refers to resources that are not within the control of the site owner. */
   failureTitle: 'Some third-party resources can be lazy loaded with a facade',
-  /** Description of a Lighthouse audit that identifies the third-party code on the page that can be lazy loaded with a facade alternative. This is displayed after a user expands the section to see more. No character length limits. 'Learn More' becomes link text to additional documentation. Lazy loading means resources are deferred until they are needed. Third-party code refers to resources that are not within the control of the site owner. */
+  /** Description of a Lighthouse audit that identifies the third-party code on the page that can be lazy loaded with a facade alternative. This is displayed after a user expands the section to see more. No character length limits. 'Learn More' becomes link text to additional documentation. A facade is a lightweight component which looks like the desired resource. Lazy loading means resources are deferred until they are needed. Third-party code refers to resources that are not within the control of the site owner. */
   description: 'Some third-party embeds can be lazy loaded. ' +
     'Consider replacing them with a facade until they are required. [Learn more](https://web.dev/efficiently-load-third-party-javascript/).',
-  /** Summary text for the result of a Lighthouse audit that identifies the third-party code on a web page that can be lazy loaded with a facade alternative. This text summarizes the number of lazy loading facades that can be used on the page. */
+  /** Summary text for the result of a Lighthouse audit that identifies the third-party code on a web page that can be lazy loaded with a facade alternative. This text summarizes the number of lazy loading facades that can be used on the page. A facade is a lightweight component which looks like the desired resource. */
   displayValue: `{itemCount, plural,
   =1 {# facade alternative available}
   other {# facade alternatives available}
   }`,
-  /** Label for a table column that displays the name of the product that a URL is used for. A product is a piece of software used on the page. */
+  /** Label for a table column that displays the name of the product that a URL is used for. The products in the column will be pieces of software used on the page, like the "YouTube Embedded Player" or the "Drift Live Chat" box. */
   columnProduct: 'Product',
   /**
    * @description Template for a table entry that gives the name of a product which we categorize as video related.
