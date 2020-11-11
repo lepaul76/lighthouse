@@ -104,7 +104,7 @@ class ThirdPartyFacades extends Audit {
       result.blockingTime += item.blockingTime;
       return result;
     });
-    finalItem.url = str_(i18n.UIStrings.otherValue);
+    finalItem.url = str_(i18n.UIStrings.rowOther);
     items.push(finalItem);
   }
 
