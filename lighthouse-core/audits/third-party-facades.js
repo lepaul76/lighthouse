@@ -29,14 +29,14 @@ const MainThreadTasks = require('../computed/main-thread-tasks.js');
 const ThirdPartySummary = require('./third-party-summary.js');
 
 const UIStrings = {
-  /** Title of a diagnostic audit that provides details about the third-party code on a web page that can be lazy loaded with a facade alternative. This descriptive title is shown to users when no resources have facade alternatives available. Lazy loading means loading resources is deferred until they are needed. */
+  /** Title of a diagnostic audit that provides details about the third-party code on a web page that can be lazy loaded with a facade alternative. This descriptive title is shown to users when no resources have facade alternatives available. Lazy loading means resources are deferred until they are needed. Third-party code refers to resources that are not within the control of the site owner. */
   title: 'Lazy load third-party resources with facades',
-  /** Title of a diagnostic audit that provides details about the third-party code on a web page that can be lazy loaded with a facade alternative. This descriptive title is shown to users when one or more third-party resources have available facade alternatives. Lazy loading means loading resources is deferred until they are needed. */
+  /** Title of a diagnostic audit that provides details about the third-party code on a web page that can be lazy loaded with a facade alternative. This descriptive title is shown to users when one or more third-party resources have available facade alternatives. Lazy loading means resources are deferred until they are needed. Third-party code refers to resources that are not within the control of the site owner. */
   failureTitle: 'Some third-party resources can be lazy loaded with a facade',
-  /** Description of a Lighthouse audit that identifies the third party code on the page that can be lazy loaded with a facade alternative. This is displayed after a user expands the section to see more. No character length limits. 'Learn More' becomes link text to additional documentation. Lazy loading means loading resources is deferred until they are needed. */
-  description: 'Some third party embeds can be lazy loaded. ' +
+  /** Description of a Lighthouse audit that identifies the third party code on the page that can be lazy loaded with a facade alternative. This is displayed after a user expands the section to see more. No character length limits. 'Learn More' becomes link text to additional documentation. Lazy loading means resources are deferred until they are needed. Third-party code refers to resources that are not within the control of the site owner. */
+  description: 'Some third-party embeds can be lazy loaded. ' +
     'Consider replacing them with a facade until they are required. [Learn more](https://web.dev/efficiently-load-third-party-javascript/).',
-  /** Summary text for the result of a Lighthouse audit that identifies the third party code on a web page that can be lazy loaded with a facade alternative. This text summarizes the number of lazy loading facades that can be used on the page. Lazy loading means loading resources is deferred until they are needed. */
+  /** Summary text for the result of a Lighthouse audit that identifies the third party code on a web page that can be lazy loaded with a facade alternative. This text summarizes the number of lazy loading facades that can be used on the page. Lazy loading means resources are deferred until they are needed. */
   displayValue: `{itemCount, plural,
   =1 {# facade alternative available}
   other {# facade alternatives available}
@@ -90,6 +90,7 @@ class ThirdPartyFacades extends Audit {
   }
 
   /**
+   * Sort items by transfer size and combine any items <1KB into a single row.
    * @param {ThirdPartySummary.URLSummary[]} items
    */
   static condenseItems(items) {
@@ -155,10 +156,10 @@ class ThirdPartyFacades extends Audit {
 
       let productWithCategory;
       if (categoryTemplate) {
-        // Display product name with category next to it in the same column
+        // Display product name with category next to it in the same column.
         productWithCategory = str_(categoryTemplate, {productName: product.name});
       } else {
-        // Just display product name if no category is found
+        // Just display product name if no category is found.
         productWithCategory = product.name;
       }
 
