@@ -15,36 +15,20 @@ const videoEmbedsTrace = require('../fixtures/traces/video-embeds-m84.json');
 const videoEmbedsDevtolsLog = require('../fixtures/traces/video-embeds-m84.devtools.log.json');
 const noThirdPartyTrace = require('../fixtures/traces/no-tracingstarted-m74.json');
 
-function resourceEntry(startTime, headerEndTime, endTime, transferSize, url) {
-  return {
-    url,
-    startTime,
-    endTime,
-    transferSize,
-    timing: {
-      receiveHeadersEnd: (headerEndTime - startTime) * 1000,
-    },
-  };
+function intercomProductUrl(id) {
+  return `https://widget.intercom.io/widget/${id}`;
 }
 
-function intercomProductEntry(startTime, headerEndTime, endTime, transferSize, id) {
-  const url = `https://widget.intercom.io/widget/${id}`;
-  return resourceEntry(startTime, headerEndTime, endTime, transferSize, url);
+function intercomResourceUrl(id) {
+  return `https://js.intercomcdn.com/frame-modern.${id}.js`;
 }
 
-function intercomResourceEntry(startTime, headerEndTime, endTime, transferSize, id) {
-  const url = `https://js.intercomcdn.com/frame-modern.${id}.js`;
-  return resourceEntry(startTime, headerEndTime, endTime, transferSize, url);
+function youtubeProductUrl(id) {
+  return `https://www.youtube.com/embed/${id}`;
 }
 
-function youtubeProductEntry(startTime, headerEndTime, endTime, transferSize, id) {
-  const url = `https://www.youtube.com/embed/${id}`;
-  return resourceEntry(startTime, headerEndTime, endTime, transferSize, url);
-}
-
-function youtubeResourceEntry(startTime, headerEndTime, endTime, transferSize, id) {
-  const url = `https://i.ytimg.com/${id}/maxresdefault.jpg`;
-  return resourceEntry(startTime, headerEndTime, endTime, transferSize, url);
+function youtubeResourceUrl(id) {
+  return `https://i.ytimg.com/${id}/maxresdefault.jpg`;
 }
 
 /* eslint-env jest */
@@ -53,9 +37,9 @@ describe('Third party facades audit', () => {
     const artifacts = {
       devtoolsLogs: {
         defaultPass: networkRecordsToDevtoolsLog([
-          resourceEntry(100, 101, 102, 2000, 'https://example.com'),
-          intercomProductEntry(200, 201, 202, 4000, '1'),
-          intercomResourceEntry(300, 301, 302, 8000, 'a'),
+          {transferSize: 2000, url: 'https://example.com'},
+          {transferSize: 4000, url: intercomProductUrl('1')},
+          {transferSize: 8000, url: intercomResourceUrl('a')},
         ]),
       },
       traces: {defaultPass: createTestTrace({timeOrigin: 0, traceEnd: 2000})},
@@ -98,11 +82,11 @@ describe('Third party facades audit', () => {
     const artifacts = {
       devtoolsLogs: {
         defaultPass: networkRecordsToDevtoolsLog([
-          resourceEntry(100, 101, 102, 2000, 'https://example.com'),
-          intercomProductEntry(200, 201, 202, 4000, '1'),
-          youtubeProductEntry(210, 211, 212, 3000, '2'),
-          intercomResourceEntry(300, 301, 302, 8000, 'a'),
-          youtubeResourceEntry(310, 311, 312, 7000, 'b'),
+          {transferSize: 2000, url: 'https://example.com'},
+          {transferSize: 4000, url: intercomProductUrl('1')},
+          {transferSize: 3000, url: youtubeProductUrl('2')},
+          {transferSize: 8000, url: intercomResourceUrl('a')},
+          {transferSize: 7000, url: youtubeResourceUrl('b')},
         ]),
       },
       traces: {defaultPass: createTestTrace({timeOrigin: 0, traceEnd: 2000})},
@@ -167,11 +151,10 @@ describe('Third party facades audit', () => {
     const artifacts = {
       devtoolsLogs: {
         defaultPass: networkRecordsToDevtoolsLog([
-          resourceEntry(100, 101, 102, 2000, 'https://example.com'),
-          // The first product entry is used to mark the start of product requests
-          intercomProductEntry(200, 201, 202, 2000, '1'),
-          intercomResourceEntry(300, 301, 302, 8000, 'a'),
-          intercomProductEntry(400, 401, 402, 2000, '1'),
+          {transferSize: 2000, url: 'https://example.com'},
+          {transferSize: 2000, url: intercomProductUrl('1')},
+          {transferSize: 8000, url: intercomResourceUrl('a')},
+          {transferSize: 2000, url: intercomProductUrl('1')},
         ]),
       },
       traces: {defaultPass: createTestTrace({timeOrigin: 0, traceEnd: 2000})},
@@ -214,8 +197,8 @@ describe('Third party facades audit', () => {
     const artifacts = {
       devtoolsLogs: {
         defaultPass: networkRecordsToDevtoolsLog([
-          resourceEntry(100, 101, 102, 2000, 'https://intercomcdn.com'),
-          intercomProductEntry(200, 201, 202, 4000, '1'),
+          {transferSize: 2000, url: 'https://intercomcdn.com'},
+          {transferSize: 4000, url: intercomProductUrl('1')},
         ]),
       },
       traces: {defaultPass: createTestTrace({timeOrigin: 0, traceEnd: 2000})},
@@ -252,7 +235,7 @@ describe('Third party facades audit', () => {
     const artifacts = {
       devtoolsLogs: {
         defaultPass: networkRecordsToDevtoolsLog([
-          resourceEntry(100, 101, 102, 2000, 'https://example.com'),
+          {transferSize: 2000, url: 'https://example.com'},
         ]),
       },
       traces: {defaultPass: noThirdPartyTrace},
