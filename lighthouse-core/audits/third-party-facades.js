@@ -91,7 +91,7 @@ class ThirdPartyFacades extends Audit {
 
   /**
    * Sort items by transfer size and combine small items into a single row.
-   * items will be condensed to maximum of 6 rows.
+   * Items will be mutated in place to a maximum of 6 rows.
    * @param {ThirdPartySummary.URLSummary[]} items
    */
   static condenseItems(items) {
