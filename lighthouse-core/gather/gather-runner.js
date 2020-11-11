@@ -14,7 +14,7 @@ const NetworkRecorder = require('../lib/network-recorder.js');
 const constants = require('../config/constants.js');
 const i18n = require('../lib/i18n/i18n.js');
 const URL = require('../lib/url-shim.js');
-const pageFunctions = require('../lib/page-functions.js');
+const FullPageScreenshotGatherer = require('./gatherers/full-page-screenshot.js');
 
 const UIStrings = {
   /**
@@ -510,60 +510,6 @@ class GatherRunner {
   }
 
   /**
-   * Gatherers can collect details about DOM nodes, including their position on the page.
-   * Layout shifts occuring after a gatherer runs can cause these positions to be incorrect,
-   * resulting in a poor experience for element screenshots.
-   * `getNodeDetails` maintains a collection of DOM objects in the page, which we can iterate
-   * to re-collect the bounding client rectangle. We also update the devtools node path.
-   * The old devtools node path is used as a lookup key. We walk the entire artifacts object
-   * to update all objects that reference an old devtools node path.
-   * @param {Driver} driver
-   * @param {Partial<LH.Artifacts>} artifacts
-   */
-  static async resolveNodes(driver, artifacts) {
-    function resolveNodes() {
-      return (window.__nodes || []).map(({key, node}) => {
-        return {
-          key,
-          newBoundingRect: getBoundingClientRect(node),
-          newDevtoolsNodePath: getNodePath(node),
-        };
-      });
-    }
-    const expression = `(function () {
-      ${pageFunctions.getBoundingClientRectString};
-      ${pageFunctions.getNodePathString};
-      return (${resolveNodes.toString()}());
-    })()`;
-
-    /** @type {Array<{key: string, newBoundingRect: any, newDevtoolsNodePath: string}>} */
-    const resolved = await driver.evaluateAsync(expression, {useIsolation: true});
-
-    console.log(' resolved ====');
-    console.log(resolved);
-
-    const walk = require('../lib/sd-validation/helpers/walk-object.js');
-    walk(artifacts, (name, value) => {
-      if (!value || typeof value !== 'object') return;
-      if (!value.path && !value.devtoolsNodePath) return;
-
-      const resolvedNode = resolved.find(r => r.key === value.devtoolsNodePath);
-      if (!resolvedNode) return;
-
-      console.log(resolvedNode.key, 'set to rect', resolvedNode.newBoundingRect);
-
-      // Rects are stored on properties named either `boundingRect` or `clientRect`.
-      if (value.boundingRect) {
-        value.boundingRect = resolvedNode.newBoundingRect;
-      } else if (value.clientRect) {
-        value.clientRect = resolvedNode.newBoundingRect;
-      }
-
-      value.devtoolsNodePath = resolvedNode.newDevtoolsNodePath;
-    });
-  }
-
-  /**
    * Return an initialized but mostly empty set of base artifacts, to be
    * populated as the run continues.
    * @param {{driver: Driver, requestedUrl: string, settings: LH.Config.Settings}} options
@@ -581,6 +527,7 @@ class GatherRunner {
 
     return {
       fetchTime: (new Date()).toJSON(),
+      FullPageScreenshot: null, // updated later
       LighthouseRunWarnings: [],
       TestedAsMobileDevice,
       HostFormFactor,
@@ -634,6 +581,16 @@ class GatherRunner {
   }
 
   /**
+   * Creates an Artifacts.FullPageScreenshot.
+   * @param {LH.Gatherer.PassContext} passContext
+   * @return {Promise<LH.BaseArtifacts['FullPageScreenshot']>}
+   */
+  static getFullpageScreenshot(passContext) {
+    const gatherer = new FullPageScreenshotGatherer();
+    return gatherer.afterPass(passContext);
+  }
+
+  /**
    * Populates the important base artifacts from a fully loaded test page.
    * Currently must be run before `start-url` gatherer so that `WebAppManifest`
    * will be available to it.
@@ -671,6 +628,8 @@ class GatherRunner {
       // @ts-expect-error - guaranteed to exist by the find above
       baseArtifacts.NetworkUserAgent = userAgentEntry.params.request.headers['User-Agent'];
     }
+
+    baseArtifacts.FullPageScreenshot = await this.getFullpageScreenshot(passContext);
   }
 
   /**
@@ -846,10 +805,6 @@ class GatherRunner {
     // Run `afterPass()` on gatherers and return collected artifacts.
     await GatherRunner.afterPass(passContext, loadData, gathererResults);
     const artifacts = await GatherRunner.collectArtifacts(gathererResults);
-
-    if (process.env.RESOLVE_NODES) {
-      await this.resolveNodes(driver, artifacts.artifacts);
-    }
 
     log.timeEnd(status);
     return artifacts;

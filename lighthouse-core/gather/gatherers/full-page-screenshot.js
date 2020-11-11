@@ -5,7 +5,9 @@
  */
 'use strict';
 
-const Gatherer = require('./gatherer.js');
+/* globals window getBoundingClientRect */
+
+const pageFunctions = require('../../lib/page-functions.js');
 
 // JPEG quality setting
 // Exploration and examples of reports using different quality settings: https://docs.google.com/document/d/1ZSffucIca9XDW2eEwfoevrk-OTl7WQFeMf0CgeJAA8M/edit#
@@ -22,11 +24,11 @@ function snakeCaseToCamelCase(str) {
   return str.replace(/(-\w)/g, m => m[1].toUpperCase());
 }
 
-class FullPageScreenshot extends Gatherer {
+class FullPageScreenshot {
   /**
    * @param {LH.Gatherer.PassContext} passContext
    * @param {number} maxScreenshotHeight
-   * @return {Promise<LH.Artifacts.FullPageScreenshot>}
+   * @return {Promise<LH.Artifacts.FullPageScreenshot['screenshot']>}
    */
   async _takeScreenshot(passContext, maxScreenshotHeight) {
     const driver = passContext.driver;
@@ -73,6 +75,41 @@ class FullPageScreenshot extends Gatherer {
   }
 
   /**
+   * Gatherers can collect details about DOM nodes, including their position on the page.
+   * Layout shifts occuring after a gatherer runs can cause these positions to be incorrect,
+   * resulting in a poor experience for element screenshots.
+   * `getNodeDetails` maintains a collection of DOM objects in the page, which we can iterate
+   * to re-collect the bounding client rectangle. We also update the devtools node path.
+   * The old devtools node path is used as a lookup key. We walk the entire artifacts object
+   * to update all objects that reference an old devtools node path.
+   * @param {LH.Gatherer.PassContext} passContext
+   * @return {Promise<LH.Artifacts.FullPageScreenshot['nodes']>}
+   */
+  async _resolveNodes(passContext) {
+    if (!process.env.RESOLVE_NODES) return {};
+
+    function resolveNodes() {
+      /** @type {LH.Artifacts.FullPageScreenshot['nodes']} */
+      const nodes = {};
+      if (!window.__lighthouseNodesDontDeleteOrYoureFired) return nodes;
+
+      for (const [id, node] of window.__lighthouseNodesDontDeleteOrYoureFired.entries()) {
+        // @ts-expect-error - getBoundingClientRect put into scope via stringification
+        const rect = getBoundingClientRect(node);
+        if (rect.width || rect.height) nodes[id] = rect;
+      }
+
+      return nodes;
+    }
+    const expression = `(function () {
+      ${pageFunctions.getBoundingClientRectString};
+      return (${resolveNodes.toString()}());
+    })()`;
+
+    return passContext.driver.evaluateAsync(expression, {useIsolation: true});
+  }
+
+  /**
    * @param {LH.Gatherer.PassContext} passContext
    * @return {Promise<LH.Artifacts.FullPageScreenshot | null>}
    */
@@ -93,7 +130,10 @@ class FullPageScreenshot extends Gatherer {
       }
     }
 
-    return screenshot;
+    return {
+      screenshot,
+      nodes: await this._resolveNodes(passContext),
+    };
   }
 
   /**

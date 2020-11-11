@@ -216,7 +216,7 @@ function mergeSymmetricFailures(overlapFailures) {
  * @returns {TapTargetTableItem[]}
  */
 function getTableItems(overlapFailures) {
-  const tableItems = overlapFailures.map(failure => {
+  const tableItems = overlapFailures.map((failure) => {
     const largestCR = getLargestRect(failure.tapTarget.clientRects);
     const width = Math.floor(largestCR.width);
     const height = Math.floor(largestCR.height);
@@ -249,6 +249,7 @@ function targetToTableNode(target) {
 
   return {
     type: 'node',
+    id: target.id,
     snippet: target.snippet,
     path: target.devtoolsNodePath,
     selector: target.selector,

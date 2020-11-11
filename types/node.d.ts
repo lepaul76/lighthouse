@@ -10,3 +10,8 @@ declare module NodeJS {
     isLightrider?: boolean;
   }
 }
+
+interface Window {
+  /** Used by FullPageScreenshot gatherer. */
+  __lighthouseNodesDontDeleteOrYoureFired: Map<string, HTMLElement>;
+}

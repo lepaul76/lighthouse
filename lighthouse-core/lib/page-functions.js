@@ -451,15 +451,22 @@ function wrapRequestIdleCallback(cpuSlowdownMultiplier) {
  */
 function getNodeDetailsImpl(element) {
   element = element instanceof ShadowRoot ? element.host : element;
+
+  if (!window.__lighthouseNodesDontDeleteOrYoureFired) {
+    window.__lighthouseNodesDontDeleteOrYoureFired = new Map();
+  }
+  const id = `${element.tagName}-${window.__lighthouseNodesDontDeleteOrYoureFired.size}`;
+  window.__lighthouseNodesDontDeleteOrYoureFired.set(id, element);
+
   const details = {
+    id,
     devtoolsNodePath: getNodePath(element),
     selector: getNodeSelector(element),
     boundingRect: getBoundingClientRect(element),
     snippet: getOuterHTMLSnippet(element),
     nodeLabel: getNodeLabel(element),
   };
-  window.__nodes = window.__nodes || [];
-  window.__nodes.push({key: details.devtoolsNodePath, node: element});
+
   return details;
 }
 

@@ -68,9 +68,7 @@ declare global {
        */
       export interface FullPageScreenshot {
         type: 'full-page-screenshot';
-        data: string;
-        width: number;
-        height: number;
+        fullPageScreenshot: LH.BaseArtifacts['FullPageScreenshot'];
       }
 
       export interface Table {
@@ -203,6 +201,8 @@ declare global {
        */
       export interface NodeValue {
         type: 'node';
+        /** Unique identifier. */
+        id?: string;
         path?: string;
         selector?: string;
         boundingRect?: Artifacts.Rect;

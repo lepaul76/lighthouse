@@ -27,6 +27,7 @@ const {requireAudits, mergeOptionsOfItems, resolveModule} = require('./config-he
  */
 const BASE_ARTIFACT_BLANKS = {
   fetchTime: '',
+  FullPageScreenshot: '',
   LighthouseRunWarnings: '',
   TestedAsMobileDevice: '',
   HostFormFactor: '',

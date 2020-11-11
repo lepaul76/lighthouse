@@ -26,6 +26,8 @@ declare global {
     export interface BaseArtifacts {
       /** The ISO-8601 timestamp of when the test page was fetched and artifacts collected. */
       fetchTime: string;
+      /** Screenshot of the entire page (rather than just the above the fold content). */
+      FullPageScreenshot: Artifacts.FullPageScreenshot | null;
       /** A set of warnings about unexpected things encountered while loading and testing the page. */
       LighthouseRunWarnings: Array<string | IcuMessage>;
       /** Whether the page was loaded on either a real or emulated mobile device. */
@@ -112,8 +114,6 @@ declare global {
       FontSize: Artifacts.FontSize;
       /** All the form elements in the page and formless inputs. */
       FormElements: Artifacts.Form[];
-      /** Screenshot of the entire page (rather than just the above the fold content). */
-      FullPageScreenshot: Artifacts.FullPageScreenshot | null;
       /** Information about event listeners registered on the global object. */
       GlobalListeners: Array<Artifacts.GlobalListener>;
       /** The page's document body innerText if loaded with JavaScript disabled. */
@@ -158,6 +158,7 @@ declare global {
       export type MetaElement = LH.Artifacts['MetaElements'][0];
 
       export interface NodeDetails {
+        id: string;
         devtoolsNodePath: string,
         selector: string,
         boundingRect: Rect | null,
@@ -649,10 +650,13 @@ declare global {
       }
 
       export interface FullPageScreenshot {
-        /** Base64 image data URL. */
-        data: string;
-        width: number;
-        height: number;
+        screenshot: {
+          /** Base64 image data URL. */
+          data: string;
+          width: number;
+          height: number;
+        };
+        nodes: Record<string, Rect>;
       }
 
       export interface TimingSummary {
