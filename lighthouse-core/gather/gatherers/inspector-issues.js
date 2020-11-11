@@ -64,6 +64,7 @@ class InspectorIssues extends Gatherer {
       if (issue.details.mixedContentIssueDetails) {
         const issueDetails = issue.details.mixedContentIssueDetails;
         const issueReqId = issueDetails.request && issueDetails.request.requestId;
+        // Duplicate issues can occur for the same request; only use the one with a matching networkRequest.
         if (issueReqId &&
           networkRecords.find(req => req.requestId === issueReqId)) {
           artifact.mixedContent.push(issueDetails);
@@ -72,6 +73,7 @@ class InspectorIssues extends Gatherer {
       if (issue.details.sameSiteCookieIssueDetails) {
         const issueDetails = issue.details.sameSiteCookieIssueDetails;
         const issueReqId = issueDetails.request && issueDetails.request.requestId;
+        // Duplicate issues can occur for the same request; only use the one with a matching networkRequest.
         if (issueReqId &&
           networkRecords.find(req => req.requestId === issueReqId)) {
           artifact.sameSiteCookies.push(issueDetails);
@@ -80,6 +82,7 @@ class InspectorIssues extends Gatherer {
       if (issue.details.blockedByResponseIssueDetails) {
         const issueDetails = issue.details.blockedByResponseIssueDetails;
         const issueReqId = issueDetails.request && issueDetails.request.requestId;
+        // Duplicate issues can occur for the same request; only use the one with a matching networkRequest.
         if (issueReqId &&
           networkRecords.find(req => req.requestId === issueReqId)) {
           artifact.blockedByResponse.push(issueDetails);
@@ -88,6 +91,7 @@ class InspectorIssues extends Gatherer {
       if (issue.details.heavyAdIssueDetails) {
         artifact.heavyAds.push(issue.details.heavyAdIssueDetails);
       }
+      // Duplicate issues can occur for the same request; only use the one with a matching networkRequest.
       if (issue.details.contentSecurityPolicyIssueDetails) {
         artifact.contentSecurityPolicy.push(issue.details.contentSecurityPolicyIssueDetails);
       }
