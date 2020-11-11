@@ -90,13 +90,18 @@ class ThirdPartyFacades extends Audit {
   }
 
   /**
-   * Sort items by transfer size and combine any items <1KB into a single row.
+   * Sort items by transfer size and combine small items into a single row.
    * @param {ThirdPartySummary.URLSummary[]} items
    */
   static condenseItems(items) {
     items.sort((a, b) => b.transferSize - a.transferSize);
-    const splitIndex = items.findIndex((item) => item.transferSize < 1000);
-    if (splitIndex === -1) return;
+
+    // Items <1KB are condensed. If all items are <1KB, condense all but the largest.
+    let splitIndex = items.findIndex((item) => item.transferSize < 1000) || 1;
+    // Show details for maximum of 5 items.
+    if (splitIndex === -1 || splitIndex > 5) splitIndex = 5;
+    // If there is only 1 item to condense, don't condense.
+    if (splitIndex >= items.length - 1) return;
 
     const remainder = items.splice(splitIndex);
     const finalItem = remainder.reduce((result, item) => {
@@ -104,6 +109,10 @@ class ThirdPartyFacades extends Audit {
       result.blockingTime += item.blockingTime;
       return result;
     });
+
+    // If condensed row is still <1KB, don't show it.
+    if (finalItem.transferSize < 1000) return;
+
     finalItem.url = str_(i18n.UIStrings.rowOther);
     items.push(finalItem);
   }

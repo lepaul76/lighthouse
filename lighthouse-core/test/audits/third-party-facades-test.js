@@ -210,56 +210,6 @@ describe('Third party facades audit', () => {
     ]);
   });
 
-  it('condenses items under 1KB', async () => {
-    const artifacts = {
-      devtoolsLogs: {
-        defaultPass: networkRecordsToDevtoolsLog([
-          resourceEntry(100, 101, 102, 2000, 'https://example.com'),
-          intercomProductEntry(200, 201, 202, 4000, '1'),
-          intercomResourceEntry(300, 301, 302, 2000, 'a'),
-          intercomResourceEntry(310, 311, 312, 800, 'b'),
-          intercomResourceEntry(320, 321, 322, 0, 'c'),
-        ]),
-      },
-      traces: {defaultPass: createTestTrace({timeOrigin: 0, traceEnd: 2000})},
-      URL: {finalUrl: 'https://example.com'},
-    };
-
-    const settings = {throttlingMethod: 'simulate', throttling: {cpuSlowdownMultiplier: 4}};
-    const results = await ThirdPartyFacades.audit(artifacts, {computedCache: new Map(), settings});
-    expect(results.details.items).toMatchObject([
-      {
-        transferSize: 6800,
-        blockingTime: 0,
-        subItems: {
-          type: 'subitems',
-          items: [
-            {
-              url: 'https://widget.intercom.io/widget/1',
-              mainThreadTime: 0,
-              blockingTime: 0,
-              transferSize: 4000,
-            },
-            {
-              url: 'https://js.intercomcdn.com/frame-modern.a.js',
-              mainThreadTime: 0,
-              blockingTime: 0,
-              transferSize: 2000,
-            },
-            {
-              url: {
-                formattedDefault: 'Other resources',
-              },
-              mainThreadTime: 0,
-              blockingTime: 0,
-              transferSize: 800,
-            },
-          ],
-        },
-      },
-    ]);
-  });
-
   it('does not report first party resources', async () => {
     const artifacts = {
       devtoolsLogs: {
@@ -372,20 +322,10 @@ describe('Third party facades audit', () => {
               {
                 blockingTime: 0,
                 mainThreadTime: 0,
-                transferSize: 10703,
-                url: 'https://www.youtube.com/embed/tgbNymZ7vqY',
-              },
-              {
-                blockingTime: 0,
-                mainThreadTime: 0,
-                transferSize: 3191,
-                url: 'https://www.youtube.com/yts/jsbin/fetch-polyfill-vfl6MZH8P/fetch-polyfill.js',
-              },
-              {
-                blockingTime: 0,
-                mainThreadTime: 0,
-                transferSize: 3077,
-                url: 'https://yt3.ggpht.com/a/AATXAJxtCYVD65XPtigYUOad-Nd2v3EvnXnz__MkJrg=s68-c-k-c0x00ffffff-no-rj',
+                transferSize: 16971,
+                url: {
+                  formattedDefault: 'Other resources',
+                },
               },
             ],
             type: 'subitems',
@@ -429,13 +369,7 @@ describe('Third party facades audit', () => {
               {
                 blockingTime: 0,
                 mainThreadTime: 0,
-                transferSize: 1075,
-                url: 'https://i.vimeocdn.com/video/784397921.jpg?mw=80&q=85',
-              },
-              {
-                blockingTime: 0,
-                mainThreadTime: 0,
-                transferSize: 928,
+                transferSize: 2003,
                 url: {
                   formattedDefault: 'Other resources',
                 },
@@ -446,5 +380,99 @@ describe('Third party facades audit', () => {
         },
       ]
     );
+  });
+
+  describe('.condenseItems', () => {
+    it('basic case', () => {
+      const items = [
+        {url: 'd', transferSize: 500, blockingTime: 5},
+        {url: 'b', transferSize: 1000, blockingTime: 0},
+        {url: 'c', transferSize: 500, blockingTime: 5},
+        {url: 'e', transferSize: 500, blockingTime: 5},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+      ];
+      ThirdPartyFacades.condenseItems(items);
+      expect(items).toMatchObject([
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'b', transferSize: 1000, blockingTime: 0},
+        {url: {formattedDefault: 'Other resources'}, transferSize: 1500, blockingTime: 15},
+      ]);
+    });
+
+    it('only shown top 5 items', () => {
+      const items = [
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 5},
+        {url: 'a', transferSize: 5000, blockingTime: 5},
+      ];
+      ThirdPartyFacades.condenseItems(items);
+      expect(items).toMatchObject([
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: {formattedDefault: 'Other resources'}, transferSize: 10000, blockingTime: 10},
+      ]);
+    });
+
+    it('hide condensed row if total transfer size <1KB', () => {
+      const items = [
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'b', transferSize: 100, blockingTime: 0},
+        {url: 'c', transferSize: 100, blockingTime: 0},
+      ];
+      ThirdPartyFacades.condenseItems(items);
+      expect(items).toMatchObject([
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+      ]);
+    });
+
+    it('always show at least one item', () => {
+      const items = [
+        {url: 'a', transferSize: 500, blockingTime: 0},
+        {url: 'b', transferSize: 500, blockingTime: 0},
+        {url: 'c', transferSize: 500, blockingTime: 0},
+      ];
+      ThirdPartyFacades.condenseItems(items);
+      expect(items).toMatchObject([
+        {url: 'a', transferSize: 500, blockingTime: 0},
+        {url: {formattedDefault: 'Other resources'}, transferSize: 1000, blockingTime: 0},
+      ]);
+    });
+
+    it('single small item', () => {
+      const items = [
+        {url: 'a', transferSize: 500, blockingTime: 0},
+      ];
+      ThirdPartyFacades.condenseItems(items);
+      expect(items).toMatchObject([
+        {url: 'a', transferSize: 500, blockingTime: 0},
+      ]);
+    });
+
+    it('do not condense if only one item to condense', () => {
+      const items = [
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'c', transferSize: 500, blockingTime: 0},
+      ];
+      ThirdPartyFacades.condenseItems(items);
+      expect(items).toMatchObject([
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'a', transferSize: 5000, blockingTime: 0},
+        {url: 'c', transferSize: 500, blockingTime: 0},
+      ]);
+    });
   });
 });
