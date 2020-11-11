@@ -18,7 +18,6 @@ const mkdir = fs.promises.mkdir;
 const LighthouseRunner = require('../lighthouse-core/runner.js');
 const exorcist = require('exorcist');
 const browserify = require('browserify');
-// const babelify = require('babelify');
 const terser = require('terser');
 const {minifyFileTransform} = require('./build-utils.js');
 
@@ -61,9 +60,7 @@ async function browserifyFile(entryPath, distPath) {
   let bundle = browserify(entryPath, {debug: DEBUG});
 
   bundle
-    .transform('babelify', {
-      plugins: ['@babel/plugin-proposal-class-properties'],
-    })
+    .transform('babelify')
     .plugin('browserify-banner', {
       pkg: Object.assign({COMMIT_HASH}, require('../package.json')),
       file: require.resolve('./banner.txt'),

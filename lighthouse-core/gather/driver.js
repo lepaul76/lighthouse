@@ -59,7 +59,62 @@ const DEFAULT_PROTOCOL_TIMEOUT = 30000;
  */
 
 class Driver {
+  /** @private */
+  _traceCategories = Driver.traceCategories;
+
+  /**
+   * @private
+   * An event emitter that enforces mapping between Crdp event names and payload types.
+   */
+  _eventEmitter = /** @type {CrdpEventEmitter} */ (new EventEmitter());
+
+  /**
+   * @private
+   * Used to save network and lifecycle protocol traffic. Just Page and Network are needed.
+   */
+  _devtoolsLog = new DevtoolsLog(/^(Page|Network)\./);
+
+  /**
+   * @private
+   * @type {Map<string, number>}
+   */
+  _domainEnabledCounts = new Map();
+
+  /**
+   * @private
+   * @type {number|undefined}
+   */
+  _isolatedExecutionContextId = undefined;
+
+  /**
+   * Used for monitoring network status events during gotoURL.
+   * @type {?NetworkRecorder}
+   * @private
+   */
+  _networkStatusMonitor = null;
+
+  /**
+   * Used for monitoring url redirects during gotoURL.
+   * @type {?string}
+   * @private
+   */
+  _monitoredUrl = null;
+
+  /**
+   * Used for monitoring frame navigations during gotoURL.
+   * @type {Array<LH.Crdp.Page.Frame>}
+   * @private
+   */
+  _monitoredUrlNavigations = [];
+
+  /**
+   * @type {number}
+   * @private
+   */
+  _nextProtocolTimeout = DEFAULT_PROTOCOL_TIMEOUT;
+
   online = true;
+
   // eslint-disable-next-line no-invalid-this
   fetcher = new Fetcher(this);
 
@@ -67,39 +122,7 @@ class Driver {
    * @param {Connection} connection
    */
   constructor(connection) {
-    this._traceCategories = Driver.traceCategories;
-    /**
-     * An event emitter that enforces mapping between Crdp event names and payload types.
-     */
-    this._eventEmitter = /** @type {CrdpEventEmitter} */ (new EventEmitter());
     this._connection = connection;
-    // Used to save network and lifecycle protocol traffic. Just Page and Network are needed.
-    this._devtoolsLog = new DevtoolsLog(/^(Page|Network)\./);
-    /** @type {Map<string, number>} */
-    this._domainEnabledCounts = new Map();
-    /** @type {number|undefined} */
-    this._isolatedExecutionContextId = undefined;
-
-    /**
-     * Used for monitoring network status events during gotoURL.
-     * @type {?NetworkRecorder}
-     * @private
-     */
-    this._networkStatusMonitor = null;
-
-    /**
-     * Used for monitoring url redirects during gotoURL.
-     * @type {?string}
-     * @private
-     */
-    this._monitoredUrl = null;
-
-    /**
-     * Used for monitoring frame navigations during gotoURL.
-     * @type {Array<LH.Crdp.Page.Frame>}
-     * @private
-     */
-    this._monitoredUrlNavigations = [];
 
     this.on('Target.attachedToTarget', event => {
       this._handleTargetAttached(event).catch(this._handleEventError);
@@ -117,12 +140,6 @@ class Driver {
     this.on('Page.frameNavigated', evt => this._monitoredUrlNavigations.push(evt.frame));
 
     connection.on('protocolevent', this._handleProtocolEvent.bind(this));
-
-    /**
-     * @type {number}
-     * @private
-     */
-    this._nextProtocolTimeout = DEFAULT_PROTOCOL_TIMEOUT;
   }
 
   static get traceCategories() {
