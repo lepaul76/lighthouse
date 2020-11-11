@@ -371,7 +371,7 @@ module.exports = [
                 subItems: {
                   type: 'subitems',
                   items: {
-                    length: 8,
+                    length: '>5', // We don't care exactly how many it has, just ensure we surface the subresources.
                   },
                 },
               },
