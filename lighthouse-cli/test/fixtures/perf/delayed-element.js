@@ -55,7 +55,7 @@ setTimeout(() => {
       document.body.textContent = 'Now it is all gone!';
     }, 50);
   }
-}, 1);
+}, 500);
 
 // long-tasks: add a very long task at least 500ms
 stall(800);

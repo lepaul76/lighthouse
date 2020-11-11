@@ -106,7 +106,11 @@ class FullPageScreenshot {
       return (${resolveNodes.toString()}());
     })()`;
 
-    return passContext.driver.evaluateAsync(expression, {useIsolation: true});
+    const pageContextResult =
+      await passContext.driver.evaluateAsync(expression, {useIsolation: false});
+    const isolatedContextResult =
+      await passContext.driver.evaluateAsync(expression, {useIsolation: true});
+    return {...pageContextResult, ...isolatedContextResult};
   }
 
   /**
