@@ -79,6 +79,7 @@
     "serve-gh-pages": "cd dist/gh-pages && python -m SimpleHTTPServer"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@build-tracker/cli": "^1.0.0-beta.15",
     "@firebase/app-types": "0.3.1",
     "@firebase/auth-types": "0.3.2",
@@ -114,6 +115,7 @@
     "angular": "^1.7.4",
     "archiver": "^3.0.0",
     "babel-eslint": "^10.1.0",
+    "babelify": "^10.0.0",
     "browserify": "^16.2.3",
     "browserify-banner": "^1.0.15",
     "bundle-phobia-cli": "^0.14.6",
@@ -146,7 +148,7 @@
     "prettier": "^1.14.3",
     "pretty-json-stringify": "^0.0.2",
     "puppeteer": "^1.19.0",
-    "terser": "^5.2.0",
+    "terser": "^5.3.8",
     "typescript": "3.9.7"
   },
   "dependencies": {

@@ -18,6 +18,7 @@ const mkdir = fs.promises.mkdir;
 const LighthouseRunner = require('../lighthouse-core/runner.js');
 const exorcist = require('exorcist');
 const browserify = require('browserify');
+// const babelify = require('babelify');
 const terser = require('terser');
 const {minifyFileTransform} = require('./build-utils.js');
 
@@ -60,6 +61,9 @@ async function browserifyFile(entryPath, distPath) {
   let bundle = browserify(entryPath, {debug: DEBUG});
 
   bundle
+    .transform('babelify', {
+      plugins: ['@babel/plugin-proposal-class-properties'],
+    })
     .plugin('browserify-banner', {
       pkg: Object.assign({COMMIT_HASH}, require('../package.json')),
       file: require.resolve('./banner.txt'),
@@ -68,7 +72,7 @@ async function browserifyFile(entryPath, distPath) {
     .transform('@wardpeet/brfs', {
       readFileSyncTransform: minifyFileTransform,
       global: true,
-      parserOpts: {ecmaVersion: 10},
+      parserOpts: {ecmaVersion: 12},
     })
     // Strip everything out of package.json includes except for the version.
     .transform('package-json-versionify');
@@ -142,12 +146,12 @@ async function browserifyFile(entryPath, distPath) {
  * @param {string} filePath
  */
 async function minifyScript(filePath) {
-  const result = await terser.minify(fs.readFileSync(filePath, 'utf-8'), {
+  const code = fs.readFileSync(filePath, 'utf-8');
+  const result = await terser.minify(code, {
     ecma: 2019,
     output: {
       comments: /^!/,
-      // @ts-expect-error - terser types are whack-a-doodle wrong.
-      max_line_len: /** @type {boolean} */ (1000),
+      max_line_len: 1000,
     },
     // The config relies on class names for gatherers.
     keep_classnames: true,
