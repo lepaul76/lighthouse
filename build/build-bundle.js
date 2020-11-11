@@ -141,8 +141,9 @@ async function browserifyFile(entryPath, distPath) {
  * Minify a javascript file, in place.
  * @param {string} filePath
  */
-function minifyScript(filePath) {
-  const result = terser.minify(fs.readFileSync(filePath, 'utf-8'), {
+async function minifyScript(filePath) {
+  const result = await terser.minify(fs.readFileSync(filePath, 'utf-8'), {
+    ecma: 2019,
     output: {
       comments: /^!/,
       // @ts-expect-error - terser types are whack-a-doodle wrong.
@@ -157,9 +158,6 @@ function minifyScript(filePath) {
       url: path.basename(`${filePath}.map`),
     },
   });
-  if (result.error) {
-    throw result.error;
-  }
 
   // Add the banner and modify globals for DevTools if necessary.
   if (isDevtools(filePath) && result.code) {
@@ -187,7 +185,7 @@ function minifyScript(filePath) {
  */
 async function build(entryPath, distPath) {
   await browserifyFile(entryPath, distPath);
-  minifyScript(distPath);
+  await minifyScript(distPath);
 }
 
 /**
