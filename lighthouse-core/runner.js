@@ -26,11 +26,11 @@ const LHError = require('./lib/lh-error.js');
 
 class Runner {
   /**
-   * @param {Connection} connection
+   * @param {(runnerData: {requestedUrl: string, config: Config, driverMock?: Driver}) => Promise<LH.Artifacts>} gatherFn
    * @param {{config: Config, url?: string, driverMock?: Driver}} runOpts
    * @return {Promise<LH.RunnerResult|undefined>}
    */
-  static async run(connection, runOpts) {
+  static async run(gatherFn, runOpts) {
     const settings = runOpts.config.settings;
     try {
       const runnerStatus = {msg: 'Runner setup', id: 'lh:runner:run'};
@@ -51,7 +51,7 @@ class Runner {
 
       // User can run -G solo, -A solo, or -GA together
       // -G and -A will run partial lighthouse pipelines,
-      // and -GA will run everything plus save artifacts to disk
+      // and -GA will run everything plus save artifacts and lhr to disk.
 
       // Gather phase
       // Either load saved artifacts off disk or from the browser
@@ -59,7 +59,7 @@ class Runner {
       let requestedUrl;
       if (settings.auditMode && !settings.gatherMode) {
         // No browser required, just load the artifacts from disk.
-        const path = Runner._getArtifactsPath(settings);
+        const path = Runner._getDataSavePath(settings);
         artifacts = assetSaver.loadArtifacts(path);
         requestedUrl = artifacts.URL.requestedUrl;
 
@@ -78,10 +78,15 @@ class Runner {
           throw new LHError(LHError.errors.INVALID_URL);
         }
 
-        artifacts = await Runner._gatherArtifactsFromBrowser(requestedUrl, runOpts, connection);
+        artifacts = await gatherFn({
+          requestedUrl,
+          config: runOpts.config,
+          driverMock: runOpts.driverMock,
+        });
+
         // -G means save these to ./latest-run, etc.
         if (settings.gatherMode) {
-          const path = Runner._getArtifactsPath(settings);
+          const path = Runner._getDataSavePath(settings);
           await assetSaver.saveArtifacts(artifacts, path);
         }
       }
@@ -155,6 +160,12 @@ class Runner {
 
       // LHR has now been localized.
       const lhr = /** @type {LH.Result} */ (i18nLhr);
+
+      // Save lhr to ./latest-run, but only if -GA is used.
+      if (settings.gatherMode && settings.auditMode) {
+        const path = Runner._getDataSavePath(settings);
+        assetSaver.saveLhr(lhr, path);
+      }
 
       // Create the HTML, JSON, and/or CSV string
       const report = generateReport(lhr, settings.output);
@@ -448,7 +459,7 @@ class Runner {
    * @param {LH.Config.Settings} settings
    * @return {string}
    */
-  static _getArtifactsPath(settings) {
+  static _getDataSavePath(settings) {
     const {auditMode, gatherMode} = settings;
 
     // This enables usage like: -GA=./custom-folder
