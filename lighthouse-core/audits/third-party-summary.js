@@ -178,7 +178,7 @@ class ThirdPartySummary extends Audit {
     // we'll replace the tail entries with single remainder entry.
     items = items.slice(0, numSubItems);
     const remainder = {
-      url: str_(i18n.UIStrings.rowOther),
+      url: str_(i18n.UIStrings.otherResourcesLabel),
       transferSize: stats.transferSize - subitemSummary.transferSize,
       blockingTime: stats.blockingTime - subitemSummary.blockingTime,
     };

@@ -113,7 +113,7 @@ class ThirdPartyFacades extends Audit {
     // If condensed row is still <1KB, don't show it.
     if (finalItem.transferSize < 1000) return;
 
-    finalItem.url = str_(i18n.UIStrings.rowOther);
+    finalItem.url = str_(i18n.UIStrings.otherResourcesLabel);
     items.push(finalItem);
   }
 
