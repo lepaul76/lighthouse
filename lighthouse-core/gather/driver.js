@@ -59,6 +59,10 @@ const DEFAULT_PROTOCOL_TIMEOUT = 30000;
  */
 
 class Driver {
+  online = true;
+  // eslint-disable-next-line no-invalid-this
+  fetcher = new Fetcher(this);
+
   /**
    * @param {Connection} connection
    */
@@ -71,7 +75,6 @@ class Driver {
     this._connection = connection;
     // Used to save network and lifecycle protocol traffic. Just Page and Network are needed.
     this._devtoolsLog = new DevtoolsLog(/^(Page|Network)\./);
-    this.online = true;
     /** @type {Map<string, number>} */
     this._domainEnabledCounts = new Map();
     /** @type {number|undefined} */
@@ -120,9 +123,6 @@ class Driver {
      * @private
      */
     this._nextProtocolTimeout = DEFAULT_PROTOCOL_TIMEOUT;
-
-    /** @type {Fetcher} */
-    this.fetcher = new Fetcher(this);
   }
 
   static get traceCategories() {

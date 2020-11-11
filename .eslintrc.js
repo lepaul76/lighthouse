@@ -72,6 +72,7 @@ module.exports = {
     'require-jsdoc': 0,
     'valid-jsdoc': 0,
     'arrow-parens': 0,
+    'no-self-assign': 0,
   },
   overrides: [
     {
@@ -81,8 +82,9 @@ module.exports = {
       },
     },
   ],
+  parser: 'babel-eslint',
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2019,
     ecmaFeatures: {
       globalReturn: true,
       jsx: false,
