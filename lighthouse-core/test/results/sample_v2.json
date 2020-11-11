@@ -1798,7 +1798,7 @@
     "third-party-facades": {
       "id": "third-party-facades",
       "title": "Lazy load third-party resources with facades",
-      "description": "Some third party embeds can be lazy loaded. Consider replacing them with a facade until they are required. [Learn more](https://web.dev/efficiently-load-third-party-javascript/).",
+      "description": "Some third-party embeds can be lazy loaded. Consider replacing them with a facade until they are required. [Learn more](https://web.dev/efficiently-load-third-party-javascript/).",
       "score": null,
       "scoreDisplayMode": "notApplicable"
     },

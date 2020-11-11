@@ -1329,7 +1329,7 @@
     "message": "P̂ŕôd́ûćt̂"
   },
   "lighthouse-core/audits/third-party-facades.js | description": {
-    "message": "Ŝóm̂é t̂h́îŕd̂ ṕâŕt̂ý êḿb̂éd̂ś ĉán̂ b́ê ĺâźŷ ĺôád̂éd̂. Ćôńŝíd̂ér̂ ŕêṕl̂áĉín̂ǵ t̂h́êḿ ŵít̂h́ â f́âćâd́ê ún̂t́îĺ t̂h́êý âŕê ŕêq́ûír̂éd̂. [Ĺêár̂ń m̂ór̂é](https://web.dev/efficiently-load-third-party-javascript/)."
+    "message": "Ŝóm̂é t̂h́îŕd̂-ṕâŕt̂ý êḿb̂éd̂ś ĉán̂ b́ê ĺâźŷ ĺôád̂éd̂. Ćôńŝíd̂ér̂ ŕêṕl̂áĉín̂ǵ t̂h́êḿ ŵít̂h́ â f́âćâd́ê ún̂t́îĺ t̂h́êý âŕê ŕêq́ûír̂éd̂. [Ĺêár̂ń m̂ór̂é](https://web.dev/efficiently-load-third-party-javascript/)."
   },
   "lighthouse-core/audits/third-party-facades.js | displayValue": {
     "message": "{itemCount, plural,\n  =1 {# f̂áĉád̂é âĺt̂ér̂ńât́îv́ê áv̂áîĺâb́l̂é}\n  other {# f̂áĉád̂é âĺt̂ér̂ńât́îv́êś âv́âíl̂áb̂ĺê}\n  }"
@@ -1733,11 +1733,11 @@
   "lighthouse-core/lib/i18n/i18n.js | ms": {
     "message": "{timeInMs, number, milliseconds} m̂ś"
   },
+  "lighthouse-core/lib/i18n/i18n.js | otherResourcesLabel": {
+    "message": "Ôt́ĥér̂ ŕêśôúr̂ćêś"
+  },
   "lighthouse-core/lib/i18n/i18n.js | otherResourceType": {
     "message": "Ôt́ĥér̂"
-  },
-  "lighthouse-core/lib/i18n/i18n.js | otherValue": {
-    "message": "Ôt́ĥér̂ ŕêśôúr̂ćêś"
   },
   "lighthouse-core/lib/i18n/i18n.js | scriptResourceType": {
     "message": "Ŝćr̂íp̂t́"
