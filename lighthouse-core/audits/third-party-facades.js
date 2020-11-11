@@ -91,6 +91,7 @@ class ThirdPartyFacades extends Audit {
 
   /**
    * Sort items by transfer size and combine small items into a single row.
+   * items will be condensed to maximum of 6 rows.
    * @param {ThirdPartySummary.URLSummary[]} items
    */
   static condenseItems(items) {
@@ -98,9 +99,9 @@ class ThirdPartyFacades extends Audit {
 
     // Items <1KB are condensed. If all items are <1KB, condense all but the largest.
     let splitIndex = items.findIndex((item) => item.transferSize < 1000) || 1;
-    // Show details for maximum of 5 items.
+    // Show details for top 5 items.
     if (splitIndex === -1 || splitIndex > 5) splitIndex = 5;
-    // If there is only 1 item to condense, don't condense.
+    // If there is only 1 item to condense, leave it as is.
     if (splitIndex >= items.length - 1) return;
 
     const remainder = items.splice(splitIndex);
