@@ -20,6 +20,7 @@ const Connection = require('../../gather/connections/connection.js');
 const {createMockSendCommandFn} = require('./mock-commands.js');
 const {makeParamsOptional} = require('../test-utils.js');
 
+// makeMocksForGatherRunner();
 jest.mock('../../lib/stack-collector.js', () => () => Promise.resolve([]));
 jest.mock('../../gather/gatherers/full-page-screenshot.js', () => {
   return class {

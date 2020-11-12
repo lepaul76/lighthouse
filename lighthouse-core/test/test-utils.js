@@ -138,9 +138,26 @@ function makeParamsOptional(fn) {
   return /** @type {(...args: RecursivePartial<TParams>) => TReturn} */ (fn);
 }
 
+/**
+ * Mocks gatherers for BaseArtifacts that tests for components using GatherRunner
+ * shouldn't concern themselves about.
+ */
+function makeMocksForGatherRunner() {
+  jest.mock('../lib/stack-collector.js', () => () => Promise.resolve([]));
+  jest.mock('../gather/gatherers/full-page-screenshot.js', () => {
+    return class {
+      constructor() {}
+      afterPass() {
+        return null;
+      }
+    };
+  });
+}
+
 module.exports = {
   getProtoRoundTrip,
   loadSourceMapFixture,
   loadSourceMapAndUsageFixture,
   makeParamsOptional,
+  makeMocksForGatherRunner,
 };
