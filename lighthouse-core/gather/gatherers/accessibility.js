@@ -109,7 +109,6 @@ class Accessibility extends Gatherer {
       ${axeLibSource};
       return (${runA11yChecks.toString()}());
     })()`;
-    require('fs').writeFileSync('tmp.js', expression);
 
     return driver.evaluateAsync(expression, {useIsolation: true}).then(returnedValue => {
       if (!returnedValue) {

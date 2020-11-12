@@ -23,36 +23,29 @@ All audits in the SEO category are [equally weighted](https://github.com/GoogleC
 
 ## How is the accessibility score calculated?
 
-<!--
-  sum = auditRefs.reduce((sum, item) => sum += item.weight, 0);
-  auditRefs
-    .filter(a => a.weight)
-    .sort((a, b) => b.weight - a.weight)
-    .map(a => [undefined, a.id, `${(a.weight / sum * 100).toLocaleString(undefined, {maximumFractionDigits:1})}%`, undefined].join(' | '))
-    .join('\n')
-  -->
+<!-- node lighthouse-core/scripts/print-a11y-scoring.js -->
 
+<!-- TODO: need a commit first to update url ... -->
 The accessibility score is a weighted average. The specific weights, at the time of publishing, are [as follows](https://github.com/GoogleChrome/lighthouse/blob/080c6b4b9fec6dfcaf8e0cd8d09c3224465e4fd3/lighthouse-core/config/default-config.js#L450-L491):
 
 | audit id | weight |
 |-|-|
- | aria-allowed-attr | 4.2% |
- | aria-hidden-body | 4.2% |
- | aria-required-attr | 4.2% |
- | aria-required-children | 4.2% |
- | aria-required-parent | 4.2% |
- | aria-roles | 4.2% |
- | aria-valid-attr-value | 4.2% |
- | aria-valid-attr | 4.2% |
- | button-name | 4.2% |
- | duplicate-id-aria | 4.2% |
- | image-alt | 4.2% |
- | input-image-alt | 4.2% |
- | label | 4.2% |
- | meta-refresh | 4.2% |
- | meta-viewport | 4.2% |
- | video-caption | 4.2% |
- | video-description | 4.2% |
+ | aria-allowed-attr | 4.4% |
+ | aria-hidden-body | 4.4% |
+ | aria-required-attr | 4.4% |
+ | aria-required-children | 4.4% |
+ | aria-required-parent | 4.4% |
+ | aria-roles | 4.4% |
+ | aria-valid-attr-value | 4.4% |
+ | aria-valid-attr | 4.4% |
+ | button-name | 4.4% |
+ | duplicate-id-aria | 4.4% |
+ | image-alt | 4.4% |
+ | input-image-alt | 4.4% |
+ | label | 4.4% |
+ | meta-refresh | 4.4% |
+ | meta-viewport | 4.4% |
+ | video-caption | 4.4% |
  | accesskeys | 1.3% |
  | aria-hidden-focus | 1.3% |
  | aria-input-field-name | 1.3% |
@@ -66,7 +59,6 @@ The accessibility score is a weighted average. The specific weights, at the time
  | frame-title | 1.3% |
  | html-has-lang | 1.3% |
  | html-lang-valid | 1.3% |
- | layout-table | 1.3% |
  | link-name | 1.3% |
  | list | 1.3% |
  | listitem | 1.3% |
@@ -75,7 +67,7 @@ The accessibility score is a weighted average. The specific weights, at the time
  | td-headers-attr | 1.3% |
  | th-has-data-cells | 1.3% |
  | valid-lang | 1.3% |
- | form-field-multiple-labels | 0.8% |
- | heading-order | 0.8% |
+ | form-field-multiple-labels | 0.9% |
+ | heading-order | 0.9% |
 
 Each audit is a pass/fail, meaning there is no room for partial points for getting an audit half-right. For example, that means if half your buttons have screenreader friendly names, and half do not, you don't get "half" of the weighted average - you get a 0 because it needs to be implemented correctly *throughout* the page.
