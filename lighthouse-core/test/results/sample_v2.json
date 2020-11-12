@@ -2728,13 +2728,6 @@
         }
       }
     },
-    "layout-table": {
-      "id": "layout-table",
-      "title": "Presentational `<table>` elements avoid using `<th>`, `<caption>` or the `[summary]` attribute.",
-      "description": "A table being used for layout purposes should not include data elements, such as the th or caption elements or the summary attribute, because this can create a confusing experience for screen reader users. [Learn more](https://web.dev/layout-table/).",
-      "score": null,
-      "scoreDisplayMode": "notApplicable"
-    },
     "link-name": {
       "id": "link-name",
       "title": "Links do not have a discernible name",
@@ -2933,13 +2926,6 @@
       "id": "video-caption",
       "title": "`<video>` elements contain a `<track>` element with `[kind=\"captions\"]`",
       "description": "When a video provides a caption it is easier for deaf and hearing impaired users to access its information. [Learn more](https://web.dev/video-caption/).",
-      "score": null,
-      "scoreDisplayMode": "notApplicable"
-    },
-    "video-description": {
-      "id": "video-description",
-      "title": "`<video>` elements contain a `<track>` element with `[kind=\"description\"]`",
-      "description": "Audio descriptions provide relevant information for videos that dialogue cannot, such as facial expressions and scenes. [Learn more](https://web.dev/video-description/).",
       "score": null,
       "scoreDisplayMode": "notApplicable"
     },
@@ -4870,11 +4856,6 @@
           "group": "a11y-names-labels"
         },
         {
-          "id": "layout-table",
-          "weight": 0,
-          "group": "a11y-tables-lists"
-        },
-        {
           "id": "link-name",
           "weight": 3,
           "group": "a11y-names-labels"
@@ -4926,11 +4907,6 @@
         },
         {
           "id": "video-caption",
-          "weight": 0,
-          "group": "a11y-audio-video"
-        },
-        {
-          "id": "video-description",
           "weight": 0,
           "group": "a11y-audio-video"
         },
@@ -6099,12 +6075,6 @@
       },
       {
         "startTime": 0,
-        "name": "lh:audit:layout-table",
-        "duration": 100,
-        "entryType": "measure"
-      },
-      {
-        "startTime": 0,
         "name": "lh:audit:link-name",
         "duration": 100,
         "entryType": "measure"
@@ -6166,12 +6136,6 @@
       {
         "startTime": 0,
         "name": "lh:audit:video-caption",
-        "duration": 100,
-        "entryType": "measure"
-      },
-      {
-        "startTime": 0,
-        "name": "lh:audit:video-description",
         "duration": 100,
         "entryType": "measure"
       },
@@ -7455,12 +7419,6 @@
       "lighthouse-core/audits/accessibility/label.js | description": [
         "audits.label.description"
       ],
-      "lighthouse-core/audits/accessibility/layout-table.js | title": [
-        "audits[layout-table].title"
-      ],
-      "lighthouse-core/audits/accessibility/layout-table.js | description": [
-        "audits[layout-table].description"
-      ],
       "lighthouse-core/audits/accessibility/link-name.js | failureTitle": [
         "audits[link-name].title"
       ],
@@ -7526,12 +7484,6 @@
       ],
       "lighthouse-core/audits/accessibility/video-caption.js | description": [
         "audits[video-caption].description"
-      ],
-      "lighthouse-core/audits/accessibility/video-description.js | title": [
-        "audits[video-description].title"
-      ],
-      "lighthouse-core/audits/accessibility/video-description.js | description": [
-        "audits[video-description].description"
       ],
       "lighthouse-core/audits/byte-efficiency/uses-long-cache-ttl.js | failureTitle": [
         "audits[uses-long-cache-ttl].title"

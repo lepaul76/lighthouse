@@ -254,15 +254,6 @@
   "lighthouse-core/audits/accessibility/label.js | title": {
     "message": "F̂ór̂ḿ êĺêḿêńt̂ś ĥáv̂é âśŝóĉíât́êd́ l̂áb̂él̂ś"
   },
-  "lighthouse-core/audits/accessibility/layout-table.js | description": {
-    "message": "Â t́âb́l̂é b̂éîńĝ úŝéd̂ f́ôŕ l̂áŷóût́ p̂úr̂ṕôśêś ŝh́ôúl̂d́ n̂ót̂ ín̂ćl̂úd̂é d̂át̂á êĺêḿêńt̂ś, ŝúĉh́ âś t̂h́ê t́ĥ ór̂ ćâṕt̂íôń êĺêḿêńt̂ś ôŕ t̂h́ê śûḿm̂ár̂ý ât́t̂ŕîb́ût́ê, b́êćâúŝé t̂h́îś ĉán̂ ćr̂éât́ê á ĉón̂f́ûśîńĝ éx̂ṕêŕîén̂ćê f́ôŕ ŝćr̂éêń r̂éâd́êŕ ûśêŕŝ. [Ĺêár̂ń m̂ór̂é](https://web.dev/layout-table/)."
-  },
-  "lighthouse-core/audits/accessibility/layout-table.js | failureTitle": {
-    "message": "P̂ŕêśêńt̂át̂íôńâĺ `<table>` êĺêḿêńt̂ś d̂ó n̂ót̂ áv̂óîd́ ûśîńĝ `<th>`, `<caption>` ór̂ t́ĥé `[summary]` ât́t̂ŕîb́ût́ê."
-  },
-  "lighthouse-core/audits/accessibility/layout-table.js | title": {
-    "message": "P̂ŕêśêńt̂át̂íôńâĺ `<table>` êĺêḿêńt̂ś âv́ôíd̂ úŝín̂ǵ `<th>`, `<caption>` ôŕ t̂h́ê `[summary]` át̂t́r̂íb̂út̂é."
-  },
   "lighthouse-core/audits/accessibility/link-name.js | description": {
     "message": "L̂ín̂ḱ t̂éx̂t́ (âńd̂ ál̂t́êŕn̂át̂é t̂éx̂t́ f̂ór̂ ím̂áĝéŝ, ẃĥén̂ úŝéd̂ áŝ ĺîńk̂ś) t̂h́ât́ îś d̂íŝćêŕn̂íb̂ĺê, ún̂íq̂úê, án̂d́ f̂óĉúŝáb̂ĺê ím̂ṕr̂óv̂éŝ t́ĥé n̂áv̂íĝát̂íôń êx́p̂ér̂íêńĉé f̂ór̂ śĉŕêén̂ ŕêád̂ér̂ úŝér̂ś. [L̂éâŕn̂ ḿôŕê](https://web.dev/link-name/)."
   },
@@ -361,15 +352,6 @@
   },
   "lighthouse-core/audits/accessibility/video-caption.js | title": {
     "message": "`<video>` êĺêḿêńt̂ś ĉón̂t́âín̂ á `<track>` êĺêḿêńt̂ ẃît́ĥ `[kind=\"captions\"]`"
-  },
-  "lighthouse-core/audits/accessibility/video-description.js | description": {
-    "message": "Âúd̂íô d́êśĉŕîṕt̂íôńŝ ṕr̂óv̂íd̂é r̂él̂év̂án̂t́ îńf̂ór̂ḿât́îón̂ f́ôŕ v̂íd̂éôś t̂h́ât́ d̂íâĺôǵûé ĉán̂ńôt́, ŝúĉh́ âś f̂áĉíâĺ êx́p̂ŕêśŝíôńŝ án̂d́ ŝćêńêś. [L̂éâŕn̂ ḿôŕê](https://web.dev/video-description/)."
-  },
-  "lighthouse-core/audits/accessibility/video-description.js | failureTitle": {
-    "message": "`<video>` êĺêḿêńt̂ś d̂ó n̂ót̂ ćôńt̂áîń â `<track>` él̂ém̂én̂t́ ŵít̂h́ `[kind=\"description\"]`."
-  },
-  "lighthouse-core/audits/accessibility/video-description.js | title": {
-    "message": "`<video>` êĺêḿêńt̂ś ĉón̂t́âín̂ á `<track>` êĺêḿêńt̂ ẃît́ĥ `[kind=\"description\"]`"
   },
   "lighthouse-core/audits/apple-touch-icon.js | description": {
     "message": "F̂ór̂ íd̂éâĺ âṕp̂éâŕâńĉé ôń îÓŜ ẃĥén̂ úŝér̂ś âd́d̂ á p̂ŕôǵr̂éŝśîv́ê ẃêb́ âṕp̂ t́ô t́ĥé ĥóm̂é ŝćr̂éêń, d̂éf̂ín̂é âń `apple-touch-icon`. Ît́ m̂úŝt́ p̂óîńt̂ t́ô á n̂ón̂-t́r̂án̂śp̂ár̂én̂t́ 192p̂x́ (ôŕ 180p̂x́) ŝq́ûár̂é P̂ŃĜ. [Ĺêár̂ń M̂ór̂é](https://web.dev/apple-touch-icon/)."
