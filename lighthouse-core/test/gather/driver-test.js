@@ -8,6 +8,7 @@
 const Driver = require('../../gather/driver.js');
 const Connection = require('../../gather/connections/connection.js');
 const LHElement = require('../../lib/lh-element.js');
+const {createEvalCode} = require('../../lib/eval.js');
 const {protocolGetVersionResponse} = require('./fake-driver.js');
 const {createMockSendCommandFn, createMockOnceFn} = require('./mock-commands.js');
 
@@ -302,6 +303,24 @@ describe('.evaluateAsync', () => {
 
     const value = await driver.evaluateAsync('"magic"', {useIsolation: true});
     expect(value).toEqual('mocked value');
+  });
+});
+
+describe('.evaluate', () => {
+  it('transforms parameters into an expression', async () => {
+    connectionStub.sendCommand = createMockSendCommandFn()
+      .mockResponse('Runtime.evaluate', {result: {value: 1}});
+
+    /** @param {number} value */
+    function main(value) {
+      return value;
+    }
+    const value = await driver.evaluate(main, {args: [1]});
+    expect(value).toEqual(1);
+
+    const {expression} = connectionStub.sendCommand.findInvocation('Runtime.evaluate');
+    const expected = createEvalCode(main, {args: [1]});
+    expect(expression.includes(expected)).toBeTruthy();
   });
 });
 

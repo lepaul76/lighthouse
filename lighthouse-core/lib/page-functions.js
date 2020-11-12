@@ -6,46 +6,20 @@
 // @ts-nocheck
 'use strict';
 
+/**
+ * @fileoverview
+ * Helper functions that are passed by `toString()` by Driver to be evaluated in target page.
+ *
+ * Important: this module should only be imported like this:
+ *     const pageFunctions = require('...');
+ * Never like this:
+ *     const {justWhatINeed} = require('...');
+ * Otherwise, minification will mangle the variable names and break usage.
+ */
+
 /** @typedef {HTMLElementTagNameMap & {[id: string]: HTMLElement}} HTMLElementByTagName */
 
 /* global window document Node ShadowRoot */
-
-/**
- * @typedef {any[]} TExtendsArray
- */
-
-/**
- * Creates valid JavaScript code given functions, strings of valid code, and arguments.
- * @template {TExtendsArray} T, R
- * @param {(...args: T) => R} mainFn The main function to call. It's return value will be the return value
- * of `createEvalCode`, wrapped in a Promise.
- * @param {{mode?: 'iife'|'function', args?: T, deps?: Array<Function|string>}} _ Set mode to `iife` to
- * create a self-executing function expression, set to `function` to create just a function
- * declaration statement. Args should match the args of `mainFn`, and can be any serializable
- * value. `deps` are functions that must be defined for `mainFn` to work.
- */
-function createEvalCode(mainFn, {mode, args, deps} = {}) {
-  const argsSerialized = args ? args.map(arg => JSON.stringify(arg)).join(',') : '';
-  const depsSerialized = deps ? deps.join('\n') : '';
-
-  if (!mode || mode === 'iife') {
-    return `(() => {
-      ${depsSerialized}
-      ${mainFn}
-      return ${mainFn.name}(${argsSerialized});
-    })()`;
-  } else {
-    return `function () {
-      ${depsSerialized}
-      ${mainFn}
-      return ${mainFn.name}.call(this, ${argsSerialized});
-    }`;
-  }
-}
-
-/**
- * Helper functions that are passed by `toString()` by Driver to be evaluated in target page.
- */
 
 /**
  * The `exceptionDetails` provided by the debugger protocol does not contain the useful
@@ -499,7 +473,6 @@ const getNodeDetailsString = `function getNodeDetails(elem) {
 }`;
 
 module.exports = {
-  createEvalCode,
   wrapRuntimeEvalErrorInBrowserString: wrapRuntimeEvalErrorInBrowser.toString(),
   registerPerformanceObserverInPageString: registerPerformanceObserverInPage.toString(),
   checkTimeSinceLastLongTaskString: checkTimeSinceLastLongTask.toString(),

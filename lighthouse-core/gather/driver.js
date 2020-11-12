@@ -14,6 +14,7 @@ const NetworkRequest = require('../lib/network-request.js');
 const EventEmitter = require('events').EventEmitter;
 const i18n = require('../lib/i18n/i18n.js');
 const URL = require('../lib/url-shim.js');
+const {createEvalCode} = require('../lib/eval.js');
 const constants = require('../config/constants.js');
 
 const log = require('lighthouse-logger');
@@ -471,8 +472,9 @@ class Driver {
 
   /**
    * Evaluate an expression (optionally defined in a structured manner, see `createEvalCode`
-   * in `page-functions.js`).
-   * See `evaluateAsync`.
+   * in `eval.js`).
+   * @see createEvalCode
+   * @see evaluateAsync
    * @template {TExtendsArray} T, R
    * @param {string | ((...args: T) => R)} expressionOrMainFn
    * @param {{useIsolation?: boolean, args?: T, deps?: Array<Function|string>}=} options
@@ -480,7 +482,7 @@ class Driver {
    */
   async evaluate(expressionOrMainFn, options = {}) {
     if (typeof expressionOrMainFn !== 'string') {
-      expressionOrMainFn = pageFunctions.createEvalCode(expressionOrMainFn, {
+      expressionOrMainFn = createEvalCode(expressionOrMainFn, {
         mode: 'iife',
         ...options,
       });
