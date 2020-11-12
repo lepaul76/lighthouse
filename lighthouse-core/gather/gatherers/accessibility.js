@@ -19,9 +19,11 @@ const pageFunctions = require('../../lib/page-functions.js');
  * @return {Promise<LH.Artifacts.Accessibility>}
  */
 /* istanbul ignore next */
-function runA11yChecks() {
+async function runA11yChecks() {
+  /** @type {import('axe-core/axe')} */
   // @ts-expect-error axe defined by axeLibSource
-  return window.axe.run(document, {
+  const axe = window.axe;
+  const axeResults = await axe.run(document, {
     elementRef: true,
     runOnly: {
       type: 'tag',
@@ -41,7 +43,6 @@ function runA11yChecks() {
       'td-has-header': {enabled: false},
       'marquee': {enabled: false},
       'area-alt': {enabled: false},
-      'aria-dpub-role-fallback': {enabled: false},
       'html-xml-lang-mismatch': {enabled: false},
       'blink': {enabled: false},
       'server-side-image-map': {enabled: false},
@@ -50,46 +51,51 @@ function runA11yChecks() {
       'svg-img-alt': {enabled: false},
       'audio-caption': {enabled: false},
     },
-    // @ts-expect-error
-  }).then(axeResults => {
-    // axe just scrolled the page, scroll back to the top of the page so that element positions
-    // are relative to the top of the page
-    document.documentElement.scrollTop = 0;
-
-    // @ts-expect-error
-    const augmentAxeNodes = result => {
-      // @ts-expect-error
-      result.nodes.forEach(node => {
-        // @ts-expect-error - getNodeDetails put into scope via stringification
-        Object.assign(node, getNodeDetails(node.element));
-        // avoid circular JSON concerns
-        node.element = node.any = node.all = node.none = undefined;
-      });
-
-      // Ensure errors can be serialized over the protocol
-      if (result.error instanceof Error) {
-        result.error = {
-          name: result.error.name,
-          message: result.error.message,
-          stack: result.error.stack,
-          errorNode: result.error.errorNode,
-        };
-      }
-    };
-
-    // Augment the node objects with outerHTML snippet & custom path string
-    axeResults.violations.forEach(augmentAxeNodes);
-    axeResults.incomplete.forEach(augmentAxeNodes);
-
-    // We only need violations, and circular references are possible outside of violations
-    axeResults = {
-      violations: axeResults.violations,
-      notApplicable: axeResults.inapplicable,
-      incomplete: axeResults.incomplete,
-      version: axeResults.testEngine.version,
-    };
-    return axeResults;
   });
+
+  // axe just scrolled the page, scroll back to the top of the page so that element positions
+  // are relative to the top of the page
+  document.documentElement.scrollTop = 0;
+
+  /** @param {import('axe-core/axe').Result} result */
+  const augmentAxeNodes = result => {
+    result.nodes.forEach(node => {
+      // @ts-expect-error - getNodeDetails put into scope via stringification
+      Object.assign(node, getNodeDetails(node.element));
+      // @ts-expect-error - avoid circular JSON concerns
+      node.element = node.any = node.all = node.none = undefined;
+    });
+
+    // Ensure errors can be serialized over the protocol
+    // @ts-expect-error
+    if (result.error instanceof Error) {
+      // @ts-expect-error
+      result.error = {
+        // @ts-expect-error
+        name: result.error.name,
+        // @ts-expect-error
+        message: result.error.mess,
+        // @ts-expect-error
+        stack: result.error.stack,
+        // @ts-expect-error
+        errorNode: result.error.errorNode,
+      };
+    }
+  };
+
+  // Augment the node objects with outerHTML snippet & custom path string
+  axeResults.violations.forEach(augmentAxeNodes);
+  axeResults.incomplete.forEach(augmentAxeNodes);
+
+  // We only need violations, and circular references are possible outside of violations
+  return {
+    // @ts-expect-error
+    violations: axeResults.violations,
+    notApplicable: axeResults.inapplicable,
+    // @ts-expect-error
+    incomplete: axeResults.incomplete,
+    version: axeResults.testEngine.version,
+  };
 }
 
 class Accessibility extends Gatherer {
@@ -104,6 +110,7 @@ class Accessibility extends Gatherer {
       ${axeLibSource};
       return (${runA11yChecks.toString()}());
     })()`;
+    require('fs').writeFileSync('tmp.js', expression);
 
     return driver.evaluateAsync(expression, {useIsolation: true}).then(returnedValue => {
       if (!returnedValue) {
