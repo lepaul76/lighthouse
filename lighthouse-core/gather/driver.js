@@ -63,7 +63,7 @@ class Driver {
   _traceCategories = Driver.traceCategories;
 
   /**
-   * @private
+   * @pri_vate (This should be private, but that makes our tests harder).
    * An event emitter that enforces mapping between Crdp event names and payload types.
    */
   _eventEmitter = /** @type {CrdpEventEmitter} */ (new EventEmitter());
