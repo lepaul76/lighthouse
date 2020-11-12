@@ -32,16 +32,20 @@ function minifyFileTransform(file) {
       next();
     },
     async final(next) {
-      const result = await terser.minify(code, {ecma: 2019});
+      try {
+        const result = await terser.minify(code, {ecma: 2019});
 
-      if (result.code) {
-        const saved = code.length - result.code.length;
-        // eslint-disable-next-line no-console
-        console.log(`minifying ${file} saved ${saved / 1000} KB`);
-        this.push(result.code);
+        if (result.code) {
+          const saved = code.length - result.code.length;
+          // eslint-disable-next-line no-console
+          console.log(`minifying ${file} saved ${saved / 1000} KB`);
+          this.push(result.code);
+        }
+
+        next();
+      } catch (err) {
+        next(err);
       }
-
-      next();
     },
   });
 }
