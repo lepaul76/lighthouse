@@ -17,7 +17,7 @@ const result = auditRefs
     return [
       undefined,
       a.id,
-      `${(a.weight / sum * 100).toLocaleString(undefined, {maximumFractionDigits:1})}%`,
+      `${(a.weight / sum * 100).toLocaleString(undefined, {maximumFractionDigits: 1})}%`,
       undefined,
     ].join(' | ');
   })
