@@ -216,7 +216,7 @@ function mergeSymmetricFailures(overlapFailures) {
  * @returns {TapTargetTableItem[]}
  */
 function getTableItems(overlapFailures) {
-  const tableItems = overlapFailures.map((failure) => {
+  const tableItems = overlapFailures.map(failure => {
     const largestCR = getLargestRect(failure.tapTarget.clientRects);
     const width = Math.floor(largestCR.width);
     const height = Math.floor(largestCR.height);

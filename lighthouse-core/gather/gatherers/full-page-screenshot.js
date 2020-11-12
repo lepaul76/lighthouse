@@ -86,7 +86,8 @@ class FullPageScreenshot {
    * @return {Promise<LH.Artifacts.FullPageScreenshot['nodes']>}
    */
   async _resolveNodes(passContext) {
-    if (!process.env.RESOLVE_NODES) return {};
+    // TODO: remove after done testing.
+    if (process.env.DONT_RESOLVE_NODES) return {};
 
     function resolveNodes() {
       /** @type {LH.Artifacts.FullPageScreenshot['nodes']} */
