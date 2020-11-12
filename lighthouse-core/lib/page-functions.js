@@ -456,6 +456,7 @@ function getNodeDetailsImpl(element) {
   if (!window.__lighthouseNodesDontDeleteOrYoureFired) {
     window.__lighthouseNodesDontDeleteOrYoureFired = new Map();
   }
+
   // Create an id that will be unique across all execution contexts.
   // The id could be any arbitrary string, the exact value is not important.
   // For example, tagName is added only because it might be useful for debugging.
