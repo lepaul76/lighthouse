@@ -202,7 +202,7 @@ declare global {
       export interface NodeValue {
         type: 'node';
         /** Unique identifier. */
-        id?: string;
+        lhId?: string;
         path?: string;
         selector?: string;
         boundingRect?: Artifacts.Rect;

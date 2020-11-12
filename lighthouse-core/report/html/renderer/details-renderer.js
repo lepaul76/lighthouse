@@ -523,7 +523,8 @@ class DetailsRenderer {
 
     if (!this._fullPageScreenshot) return element;
 
-    const rect = (item.id ? this._fullPageScreenshot.nodes[item.id] : null) || item.boundingRect;
+    const rect =
+      (item.lhId ? this._fullPageScreenshot.nodes[item.lhId] : null) || item.boundingRect;
     if (!rect) return element;
 
     const maxThumbnailSize = {width: 147, height: 100};

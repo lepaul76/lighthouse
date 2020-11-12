@@ -79,9 +79,8 @@ class FullPageScreenshot {
    * Layout shifts occuring after a gatherer runs can cause these positions to be incorrect,
    * resulting in a poor experience for element screenshots.
    * `getNodeDetails` maintains a collection of DOM objects in the page, which we can iterate
-   * to re-collect the bounding client rectangle. We also update the devtools node path.
-   * The old devtools node path is used as a lookup key. We walk the entire artifacts object
-   * to update all objects that reference an old devtools node path.
+   * to re-collect the bounding client rectangle.
+   * @see pageFunctions.getNodeDetails
    * @param {LH.Gatherer.PassContext} passContext
    * @return {Promise<LH.Artifacts.FullPageScreenshot['nodes']>}
    */

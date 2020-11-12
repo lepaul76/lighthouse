@@ -249,7 +249,7 @@ function targetToTableNode(target) {
 
   return {
     type: 'node',
-    id: target.id,
+    lhId: target.lhId,
     snippet: target.snippet,
     path: target.devtoolsNodePath,
     selector: target.selector,

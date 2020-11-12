@@ -44,7 +44,7 @@ class LargestContentfulPaintElement extends Audit {
       lcpElementDetails.push({
         node: /** @type {LH.Audit.Details.NodeValue} */ ({
           type: 'node',
-          id: lcpElement.id,
+          lhId: lcpElement.lhId,
           path: lcpElement.devtoolsNodePath,
           selector: lcpElement.selector,
           nodeLabel: lcpElement.nodeLabel,

@@ -54,7 +54,7 @@ function createMockDriver({contentSize, screenSize, screenshotData}) {
   };
 }
 
-describe('Full-page screenshot gatherer', () => {
+describe('FullPageScreenshot gatherer', () => {
   it('captures a full-page screenshot', async () => {
     const fpsGatherer = new FullPageScreenshotGatherer();
     const driver = createMockDriver({

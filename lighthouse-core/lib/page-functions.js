@@ -460,17 +460,17 @@ function getNodeDetailsImpl(element) {
   // The id could be any arbitrary string, the exact value is not important.
   // For example, tagName is added only because it might be useful for debugging.
   // But execution id and map size are added to ensure uniqueness.
-  const id = [
+  const lhId = [
     window.__lighthouseExecutionContextId !== undefined ?
       window.__lighthouseExecutionContextId :
       'page',
     window.__lighthouseNodesDontDeleteOrYoureFired.size,
     element.tagName,
   ].join('-');
-  window.__lighthouseNodesDontDeleteOrYoureFired.set(id, element);
+  window.__lighthouseNodesDontDeleteOrYoureFired.set(lhId, element);
 
   const details = {
-    id,
+    lhId,
     devtoolsNodePath: getNodePath(element),
     selector: getNodeSelector(element),
     boundingRect: getBoundingClientRect(element),
