@@ -72,7 +72,6 @@ module.exports = {
     'require-jsdoc': 0,
     'valid-jsdoc': 0,
     'arrow-parens': 0,
-    'no-self-assign': 0,
   },
   overrides: [
     {
