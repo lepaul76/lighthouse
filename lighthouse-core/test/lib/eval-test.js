@@ -16,6 +16,7 @@ describe('createEvalCode', () => {
     }
     const code = createEvalCode(mainFn, {
       mode: 'iife',
+      args: [],
     });
     expect(code).toEqual(`(() => {
       

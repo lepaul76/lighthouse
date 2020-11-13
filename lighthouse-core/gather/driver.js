@@ -467,20 +467,16 @@ class Driver {
   }
 
   /**
-   * @typedef {any[]} TExtendsArray
-   */
-
-  /**
    * Evaluate an expression (optionally defined in a structured manner, see `createEvalCode`
    * in `eval.js`).
    * @see createEvalCode
    * @see evaluateAsync
-   * @template {TExtendsArray} T, R
+   * @template {any[]} T, R
    * @param {string | ((...args: T) => R)} expressionOrMainFn
-   * @param {{useIsolation?: boolean, args?: T, deps?: Array<Function|string>}=} options
+   * @param {{args: T, useIsolation?: boolean, deps?: Array<Function|string>}} options
    * @return {Promise<R>}
    */
-  async evaluate(expressionOrMainFn, options = {}) {
+  async evaluate(expressionOrMainFn, options) {
     if (typeof expressionOrMainFn !== 'string') {
       expressionOrMainFn = createEvalCode(expressionOrMainFn, {
         mode: 'iife',

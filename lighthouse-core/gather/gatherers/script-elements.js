@@ -72,6 +72,7 @@ class ScriptElements extends Gatherer {
     const mainResource = NetworkAnalyzer.findMainDocument(loadData.networkRecords, passContext.url);
 
     const scripts = await driver.evaluate(collectAllScriptElements, {
+      args: [],
       useIsolation: true,
       deps: [
         pageFunctions.getNodeDetailsString,

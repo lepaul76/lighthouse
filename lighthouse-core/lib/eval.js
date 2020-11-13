@@ -6,21 +6,18 @@
 'use strict';
 
 /**
- * @typedef {any[]} TExtendsArray
- */
-
-/**
  * Creates valid JavaScript code given functions, strings of valid code, and arguments.
- * @template {TExtendsArray} T, R
+ * @template {any[]} T, R
  * @param {(...args: T) => R} mainFn The main function to call. It's return value will be the return value
  * of `createEvalCode`, wrapped in a Promise.
- * @param {{mode?: 'iife'|'function', args?: T, deps?: Array<Function|string>}} _ Set mode to `iife` to
+ * @param {{args: T, mode?: 'iife'|'function', deps?: Array<Function|string>}} options Set mode to `iife` to
  * create a self-executing function expression, set to `function` to create just a function
  * declaration statement. Args should match the args of `mainFn`, and can be any serializable
  * value. `deps` are functions that must be defined for `mainFn` to work.
  */
-function createEvalCode(mainFn, {mode, args, deps} = {}) {
-  const argsSerialized = args ? args.map(arg => JSON.stringify(arg)).join(',') : '';
+function createEvalCode(mainFn, options) {
+  const {mode, args, deps} = options;
+  const argsSerialized = args.map(arg => JSON.stringify(arg)).join(',');
   const depsSerialized = deps ? deps.join('\n') : '';
 
   if (!mode || mode === 'iife') {
