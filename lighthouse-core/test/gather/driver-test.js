@@ -349,6 +349,8 @@ describe('.evaluate', () => {
   });
 
   it('transforms parameters into an expression (basic)', async () => {
+    // Mock so the argument can be intercepted, and the generated code
+    // can be evaluated without the error catching code.
     const mockFn = driver._evaluateInContext = jest.fn()
       .mockImplementation(() => Promise.resolve());
 
@@ -356,7 +358,8 @@ describe('.evaluate', () => {
     function mainFn(value) {
       return value;
     }
-    await driver.evaluate(mainFn, {args: [1]});
+    /** @type {number} */
+    const value = await driver.evaluate(mainFn, {args: [1]}); // eslint-disable-line no-unused-vars
 
     const code = mockFn.mock.calls[0][0];
     expect(code).toBe(`(() => {
@@ -370,6 +373,8 @@ describe('.evaluate', () => {
   });
 
   it('transforms parameters into an expression (complex)', async () => {
+    // Mock so the argument can be intercepted, and the generated code
+    // can be evaluated without the error catching code.
     const mockFn = driver._evaluateInContext = jest.fn()
       .mockImplementation(() => Promise.resolve());
 
@@ -393,7 +398,8 @@ describe('.evaluate', () => {
       return val * val;
     }
 
-    await driver.evaluate(mainFn, {
+    /** @type {{a: number, b: number, passThru: any}} */
+    const value = await driver.evaluate(mainFn, { // eslint-disable-line no-unused-vars
       args: [{a: -5, b: 10}, 'hello'],
       deps: [abs, square],
     });
