@@ -14,7 +14,6 @@ const NetworkRequest = require('../lib/network-request.js');
 const EventEmitter = require('events').EventEmitter;
 const i18n = require('../lib/i18n/i18n.js');
 const URL = require('../lib/url-shim.js');
-const {createEvalCode} = require('../lib/eval.js');
 const constants = require('../config/constants.js');
 
 const log = require('lighthouse-logger');
@@ -439,7 +438,6 @@ class Driver {
   }
 
   /**
-   * Note: Prefer `evaluate` instead.
    * Evaluate an expression in the context of the current page. If useIsolation is true, the expression
    * will be evaluated in a content script that has access to the page's DOM but whose JavaScript state
    * is completely separate.
@@ -467,23 +465,26 @@ class Driver {
   }
 
   /**
-   * Evaluate an expression (optionally defined in a structured manner, see `createEvalCode`
-   * in `eval.js`).
-   * @see createEvalCode
-   * @see evaluateAsync
+   * Evaluate a function in the context of the current page.
+   * If `useIsolation` is true, the function will be evaluated in a content script that has
+   * access to the page's DOM but whose JavaScript state is completely separate.
+   * Returns a promise that resolves on a value of `mainFn`'s return type.
    * @template {any[]} T, R
-   * @param {string | ((...args: T) => R)} expressionOrMainFn
-   * @param {{args: T, useIsolation?: boolean, deps?: Array<Function|string>}} options
+   * @param {((...args: T) => R)} mainFn The main function to call.
+   * @param {{args: T, useIsolation?: boolean, deps?: Array<Function|string>}} options `args` should
+   *   match the args of `mainFn`, and can be any serializable value. `deps` are functions that must be
+   *   defined for `mainFn` to work.
    * @return {Promise<R>}
    */
-  async evaluate(expressionOrMainFn, options) {
-    if (typeof expressionOrMainFn !== 'string') {
-      expressionOrMainFn = createEvalCode(expressionOrMainFn, {
-        mode: 'iife',
-        ...options,
-      });
-    }
-    return this.evaluateAsync(expressionOrMainFn, options);
+  async evaluate(mainFn, options) {
+    const argsSerialized = options.args.map(arg => JSON.stringify(arg)).join(',');
+    const depsSerialized = options.deps ? options.deps.join('\n') : '';
+    const expression = `(() => {
+      ${depsSerialized}
+      ${mainFn}
+      return ${mainFn.name}(${argsSerialized});
+    })()`;
+    return this.evaluateAsync(expression, options);
   }
 
   /**
@@ -505,8 +506,8 @@ class Driver {
       // 3. Ensure that errors captured in the Promise are converted into plain-old JS Objects
       //    so that they can be serialized properly b/c JSON.stringify(new Error('foo')) === '{}'
       expression: `(function wrapInNativePromise() {
-        const __nativePromise = window.__nativePromise || Promise;
-        const URL = window.__nativeURL || window.URL;
+        const __nativePromise = globalThis.__nativePromise || Promise;
+        const URL = globalThis.__nativeURL || globalThis.URL;
         return new __nativePromise(function (resolve) {
           return __nativePromise.resolve()
             .then(_ => ${expression})
