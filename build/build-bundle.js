@@ -60,7 +60,7 @@ async function browserifyFile(entryPath, distPath) {
   let bundle = browserify(entryPath, {debug: DEBUG});
 
   bundle
-    .transform('babelify', JSON.parse(fs.readFileSync(`${__dirname}/../.babelrc`, 'utf-8')))
+    .transform('babelify')
     .plugin('browserify-banner', {
       pkg: Object.assign({COMMIT_HASH}, require('../package.json')),
       file: require.resolve('./banner.txt'),
