@@ -5,6 +5,8 @@
  */
 'use strict';
 
+require('./test-utils.js').makeMocksForGatherRunner();
+
 const Runner = require('../runner.js');
 const GatherRunner = require('../gather/gather-runner.js');
 const driverMock = require('./gather/fake-driver.js');
@@ -18,18 +20,6 @@ const path = require('path');
 const rimraf = require('rimraf');
 const LHError = require('../lib/lh-error.js');
 const i18n = require('../lib/i18n/i18n.js');
-// const {makeMocksForGatherRunner} = require('./test-utils.js');
-
-// makeMocksForGatherRunner();
-jest.mock('../lib/stack-collector.js', () => () => Promise.resolve([]));
-jest.mock('../gather/gatherers/full-page-screenshot.js', () => {
-  return class {
-    constructor() {}
-    afterPass() {
-      return null;
-    }
-  };
-});
 
 /* eslint-env jest */
 

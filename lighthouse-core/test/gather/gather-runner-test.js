@@ -7,6 +7,8 @@
 
 /* eslint-env jest */
 
+require('../test-utils.js').makeMocksForGatherRunner();
+
 const Gatherer = require('../../gather/gatherers/gatherer.js');
 const GatherRunner_ = require('../../gather/gather-runner.js');
 const assert = require('assert').strict;
@@ -19,17 +21,6 @@ const Driver = require('../../gather/driver.js');
 const Connection = require('../../gather/connections/connection.js');
 const {createMockSendCommandFn} = require('./mock-commands.js');
 const {makeParamsOptional} = require('../test-utils.js');
-
-// makeMocksForGatherRunner();
-jest.mock('../../lib/stack-collector.js', () => () => Promise.resolve([]));
-jest.mock('../../gather/gatherers/full-page-screenshot.js', () => {
-  return class {
-    constructor() {}
-    afterPass() {
-      return null;
-    }
-  };
-});
 
 const GatherRunner = {
   afterPass: makeParamsOptional(GatherRunner_.afterPass),
