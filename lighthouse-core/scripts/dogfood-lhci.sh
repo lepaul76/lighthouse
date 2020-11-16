@@ -10,7 +10,7 @@ if [[ -z "$LHCI_CANARY_SERVER_TOKEN" ]]; then
 fi
 
 if [[ "$TRAVIS_NODE_VERSION" != "12" ]]; then
-  echo "Not running dogfood script on node versions other than 10";
+  echo "Not running dogfood script on node versions other than 12";
   exit 0;
 fi
 
