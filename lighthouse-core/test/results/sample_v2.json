@@ -2208,6 +2208,18 @@
       "score": null,
       "scoreDisplayMode": "notApplicable"
     },
+    "aria-treeitem-name": {
+      "id": "aria-treeitem-name",
+      "title": "Tree items (`<div role=\"tree\">...items here...</div>`) have an accessible name",
+      "description": "When an element doesn't have an accessible name, screen readers announce it with a generic name, making it unusable for users who rely on screen readers. [Learn more](https://web.dev/aria-treeitem-name/)",
+      "score": 1,
+      "scoreDisplayMode": "binary",
+      "details": {
+        "type": "table",
+        "headings": [],
+        "items": []
+      }
+    },
     "aria-valid-attr-value": {
       "id": "aria-valid-attr-value",
       "title": "`[aria-*]` attributes have valid values",
@@ -4766,6 +4778,11 @@
           "group": "a11y-aria"
         },
         {
+          "id": "aria-treeitem-name",
+          "weight": 0,
+          "group": "a11y-aria"
+        },
+        {
           "id": "aria-valid-attr-value",
           "weight": 10,
           "group": "a11y-aria"
@@ -5962,6 +5979,12 @@
       {
         "startTime": 0,
         "name": "lh:audit:aria-toggle-field-name",
+        "duration": 100,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 0,
+        "name": "lh:audit:aria-treeitem-name",
         "duration": 100,
         "entryType": "measure"
       },
@@ -7310,6 +7333,12 @@
       ],
       "lighthouse-core/audits/accessibility/aria-toggle-field-name.js | description": [
         "audits[aria-toggle-field-name].description"
+      ],
+      "lighthouse-core/audits/accessibility/aria-treeitem-name.js | title": [
+        "audits[aria-treeitem-name].title"
+      ],
+      "lighthouse-core/audits/accessibility/aria-treeitem-name.js | description": [
+        "audits[aria-treeitem-name].description"
       ],
       "lighthouse-core/audits/accessibility/aria-valid-attr-value.js | title": [
         "audits[aria-valid-attr-value].title"

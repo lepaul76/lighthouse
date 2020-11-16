@@ -257,6 +257,7 @@ const defaultConfig = {
     'accessibility/aria-required-parent',
     'accessibility/aria-roles',
     'accessibility/aria-toggle-field-name',
+    'accessibility/aria-treeitem-name',
     'accessibility/aria-valid-attr-value',
     'accessibility/aria-valid-attr',
     'accessibility/button-name',
@@ -504,6 +505,7 @@ const defaultConfig = {
         {id: 'aria-required-parent', weight: 10, group: 'a11y-aria'},
         {id: 'aria-roles', weight: 10, group: 'a11y-aria'},
         {id: 'aria-toggle-field-name', weight: 3, group: 'a11y-aria'},
+        {id: 'aria-treeitem-name', weight: 0, group: 'a11y-aria'}, // TODO
         {id: 'aria-valid-attr-value', weight: 10, group: 'a11y-aria'},
         {id: 'aria-valid-attr', weight: 10, group: 'a11y-aria'},
         {id: 'button-name', weight: 10, group: 'a11y-names-labels'},
