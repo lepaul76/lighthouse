@@ -39,14 +39,6 @@ setTimeout(() => {
   sectionEl.append(imgEl, textEl);
   shadowRoot.append(sectionEl);
 
-  textEl.style.color = 'gray';
-  textEl.style.backgroundColor = 'lightgrey';
-  let padding = 1;
-  setInterval(() => {
-    textEl.style.paddingTop = padding + 'px';
-    padding += 1;
-  }, 50);
-
   // layout-shift-elements: ensure we can handle missing shift elements
   if (window.location.href.includes('?missing')) {
     stall(100); // force a long task to ensure we reach the rerendering stage
@@ -55,7 +47,7 @@ setTimeout(() => {
       document.body.textContent = 'Now it is all gone!';
     }, 50);
   }
-}, 500);
+}, 1000);
 
 // long-tasks: add a very long task at least 500ms
 stall(800);
