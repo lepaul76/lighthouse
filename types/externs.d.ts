@@ -317,4 +317,13 @@ declare global {
       webSocketDebuggerUrl: string;
     }
   }
+
+  interface Window {
+    /** Used by FullPageScreenshot gatherer. */
+    __lighthouseNodesDontTouchOrAllVarianceGoesAway: {
+      lhIdToElements: Map<string, HTMLElement>;
+      elementToLhId: Map<HTMLElement, string>;
+    };
+    __lighthouseExecutionContextId?: number;
+  }
 }

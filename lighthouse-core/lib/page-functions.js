@@ -453,22 +453,32 @@ function getNodeDetailsImpl(element) {
   element = element instanceof ShadowRoot ? element.host : element;
 
   // This bookkeeping is for the FullPageScreenshot gatherer.
-  if (!window.__lighthouseNodesDontDeleteOrYoureFired) {
-    window.__lighthouseNodesDontDeleteOrYoureFired = new Map();
+  if (!window.__lighthouseNodesDontTouchOrAllVarianceGoesAway) {
+    window.__lighthouseNodesDontTouchOrAllVarianceGoesAway = {
+      lhIdToElements: new Map(),
+      elementToLhId: new Map(),
+    };
   }
 
   // Create an id that will be unique across all execution contexts.
   // The id could be any arbitrary string, the exact value is not important.
   // For example, tagName is added only because it might be useful for debugging.
   // But execution id and map size are added to ensure uniqueness.
-  const lhId = [
-    window.__lighthouseExecutionContextId !== undefined ?
-      window.__lighthouseExecutionContextId :
-      'page',
-    window.__lighthouseNodesDontDeleteOrYoureFired.size,
-    element.tagName,
-  ].join('-');
-  window.__lighthouseNodesDontDeleteOrYoureFired.set(lhId, element);
+  // We also dedupe this id so that details collected for an element within the same
+  // pass and execution context will share the same id. Not technically important, but
+  // cuts down on some duplication.
+  let lhId = window.__lighthouseNodesDontTouchOrAllVarianceGoesAway.elementToLhId.get(element);
+  if (!lhId) {
+    lhId = [
+      window.__lighthouseExecutionContextId !== undefined ?
+        window.__lighthouseExecutionContextId :
+        'page',
+      window.__lighthouseNodesDontTouchOrAllVarianceGoesAway.elementToLhId.size,
+      element.tagName,
+    ].join('-');
+    window.__lighthouseNodesDontTouchOrAllVarianceGoesAway.lhIdToElements.set(lhId, element);
+    window.__lighthouseNodesDontTouchOrAllVarianceGoesAway.elementToLhId.set(element, lhId);
+  }
 
   const details = {
     lhId,

@@ -34,7 +34,7 @@ const expectations = [
             width: 1000,
             height: 18,
           },
-          '5-2-BODY': {
+          '5-1-BODY': {
             top: 8,
             bottom: 1008,
             left: 8,
@@ -42,8 +42,7 @@ const expectations = [
             width: 1000,
             height: 1000,
           },
-          '5-3-HTML': {},
-          '5-4-HTML': {},
+          '5-2-HTML': {},
         },
       },
     },

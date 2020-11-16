@@ -85,15 +85,13 @@ class FullPageScreenshot {
    * @return {Promise<LH.Artifacts.FullPageScreenshot['nodes']>}
    */
   async _resolveNodes(passContext) {
-    // TODO: remove after done testing.
-    if (process.env.DONT_RESOLVE_NODES) return {};
-
     function resolveNodes() {
       /** @type {LH.Artifacts.FullPageScreenshot['nodes']} */
       const nodes = {};
-      if (!window.__lighthouseNodesDontDeleteOrYoureFired) return nodes;
+      if (!window.__lighthouseNodesDontTouchOrAllVarianceGoesAway) return nodes;
 
-      for (const [id, node] of window.__lighthouseNodesDontDeleteOrYoureFired.entries()) {
+      const {lhIdToElements} = window.__lighthouseNodesDontTouchOrAllVarianceGoesAway;
+      for (const [id, node] of lhIdToElements.entries()) {
         // @ts-expect-error - getBoundingClientRect put into scope via stringification
         const rect = getBoundingClientRect(node);
         if (rect.width || rect.height) nodes[id] = rect;
@@ -106,6 +104,9 @@ class FullPageScreenshot {
       return (${resolveNodes.toString()}());
     })()`;
 
+    // Collect nodes with the page context (`useIsolation: false`) and with our own, reused
+    // context (useIsolation: false). Gatherers use both modes when collecting node details,
+    // so we must do the same here too.
     const pageContextResult =
       await passContext.driver.evaluateAsync(expression, {useIsolation: false});
     const isolatedContextResult =
