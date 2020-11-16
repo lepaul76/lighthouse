@@ -5,7 +5,6 @@
  */
 'use strict';
 
-const ProtocolSession = require('../../../fraggle-rock/gather/session.js');
 const RuntimeController = require('../../../fraggle-rock/gather/runtime-controller.js');
 const {
   createMockSendCommandFn: createMockSendCommandFn_,
@@ -20,6 +19,14 @@ jest.useFakeTimers();
 // This can be removed when FR becomes the default.
 const createMockSendCommandFn = createMockSendCommandFn_.bind(null, {useSessionId: false});
 
+/** @return {LH.Gatherer.FRProtocolSession} */
+function createMockSession() {
+  const session = /** @type {*} */ ({});
+  session.hasNextProtocolTimeout = jest.fn().mockReturnValue(false);
+  session.setNextProtocolTimeout = jest.fn();
+  return session;
+}
+
 describe('RuntimeController', () => {
   /** @type {LH.Gatherer.FRProtocolSession} */
   let sessionMock;
@@ -27,7 +34,7 @@ describe('RuntimeController', () => {
   let forceNewContextId;
 
   beforeEach(() => {
-    sessionMock = new ProtocolSession(/** @type {*} */ (null));
+    sessionMock = createMockSession();
 
     forceNewContextId = async (controller, executionContextId) => {
       controller._session.sendCommand = createMockSendCommandFn()
@@ -79,7 +86,7 @@ describe('.evaluateAsync', () => {
   let runtimeController;
 
   beforeEach(() => {
-    sessionMock = new ProtocolSession(/** @type {*} */ (null));
+    sessionMock = createMockSession();
     sessionMock.on = jest.fn();
     runtimeController = new RuntimeController(sessionMock);
   });
