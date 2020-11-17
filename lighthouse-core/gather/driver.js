@@ -59,6 +59,9 @@ const DEFAULT_PROTOCOL_TIMEOUT = 30000;
  * @typedef {LH.Protocol.StrictEventEmitter<LH.CrdpEvents>} CrdpEventEmitter
  */
 
+/**
+ * @implements {LH.Gatherer.FRTransitionalDriver}
+ */
 class Driver {
   /**
    * @param {Connection} connection
@@ -115,9 +118,6 @@ class Driver {
     this.fetcher = new Fetcher(this);
 
     this._runtimeController = new RuntimeController(this);
-
-    /** @type {LH.Gatherer.FRTransitionalDriver} */
-    const typecheck = this; // eslint-disable-line no-unused-vars
   }
 
   static get traceCategories() {

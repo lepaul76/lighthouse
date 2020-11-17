@@ -13,22 +13,22 @@ declare global {
   module LH.Gatherer {
     /** The Lighthouse wrapper around a raw CDP session. */
     export interface FRProtocolSession {
-      hasNextProtocolTimeout(): boolean
-      getNextProtocolTimeout(): number
-      setNextProtocolTimeout(ms: number): void
-      on<TEvent extends keyof LH.CrdpEvents>(event: TEvent, callback: (...args: LH.CrdpEvents[TEvent]) => void): void
-      off<TEvent extends keyof LH.CrdpEvents>(event: TEvent, callback: (...args: LH.CrdpEvents[TEvent]) => void): void
-      sendCommand<TMethod extends keyof LH.CrdpCommands>(method: TMethod, ...params: LH.CrdpCommands[TMethod]['paramsType']): Promise<LH.CrdpCommands[TMethod]['returnType']>
+      hasNextProtocolTimeout(): boolean;
+      getNextProtocolTimeout(): number;
+      setNextProtocolTimeout(ms: number): void;
+      on<TEvent extends keyof LH.CrdpEvents>(event: TEvent, callback: (...args: LH.CrdpEvents[TEvent]) => void): void;
+      off<TEvent extends keyof LH.CrdpEvents>(event: TEvent, callback: (...args: LH.CrdpEvents[TEvent]) => void): void;
+      sendCommand<TMethod extends keyof LH.CrdpCommands>(method: TMethod, ...params: LH.CrdpCommands[TMethod]['paramsType']): Promise<LH.CrdpCommands[TMethod]['returnType']>;
     }
 
     /** The limited driver interface shared between pre and post Fraggle Rock Lighthouse. */
     export interface FRTransitionalDriver extends FRProtocolSession {
-      evaluateAsync(expression: string, options?: {useIsolation?: boolean}): Promise<any>
+      evaluateAsync(expression: string, options?: {useIsolation?: boolean}): Promise<any>;
     }
 
     /** The limited context interface shared between pre and post Fraggle Rock Lighthouse. */
     export interface FRTransitionalContext {
-      driver: FRTransitionalDriver
+      driver: FRTransitionalDriver;
     }
 
     export interface PassContext {
