@@ -585,9 +585,15 @@ class GatherRunner {
    * @param {LH.Gatherer.PassContext} passContext
    * @return {Promise<LH.BaseArtifacts['FullPageScreenshot']>}
    */
-  static getFullpageScreenshot(passContext) {
+  static async getFullpageScreenshot(passContext) {
+    const status = {msg: 'Capture full-page screenshot', id: 'lh:gather:getFullpageScreenshot'};
+    log.time(status);
+
     const gatherer = new FullPageScreenshotGatherer();
-    return gatherer.afterPass(passContext);
+    const artifact = await gatherer.afterPass(passContext);
+
+    log.timeEnd(status);
+    return artifact;
   }
 
   /**
