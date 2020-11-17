@@ -39,9 +39,6 @@ module.exports = [
         'viewport': {
           score: 1,
         },
-        'without-javascript': {
-          score: 1,
-        },
         'load-fast-enough-for-pwa': {
         // Ignore speed test; just verify that it ran.
         },
@@ -106,9 +103,6 @@ module.exports = [
           score: 1,
         },
         'viewport': {
-          score: 1,
-        },
-        'without-javascript': {
           score: 1,
         },
         'load-fast-enough-for-pwa': {

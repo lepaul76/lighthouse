@@ -19,9 +19,6 @@ Object {
       "path": "viewport",
     },
     Object {
-      "path": "without-javascript",
-    },
-    Object {
       "path": "metrics/first-contentful-paint",
     },
     Object {
@@ -1132,11 +1129,6 @@ Object {
           "group": "pwa-optimized",
           "id": "viewport",
           "weight": 2,
-        },
-        Object {
-          "group": "pwa-optimized",
-          "id": "without-javascript",
-          "weight": 1,
         },
         Object {
           "group": "pwa-optimized",
